@@ -54,6 +54,10 @@ async def health() -> dict[str, str]:
     return {"status": "ok", "version": __version__, "provider": settings.llm_provider}
 
 
+from app.api.loans import router as loans_router  # noqa: E402
+
+app.include_router(loans_router)
+
 # Wire the CopilotKit endpoint last so the import is lazy (and skippable
 # in tests that don't need the SDK).
 runtime.mount(app)
