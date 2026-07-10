@@ -1,2 +1,15 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Policy packs and prompts are sha256-manifested (specs/07 §5): bytes on
+# disk must be identical on every platform or pack verification fails.
+policy/** text eol=lf
+specs/policy-pack/** text eol=lf
+specs/prompts/** text eol=lf
+specs/schemas/** text eol=lf
+*.json text eol=lf
+*.yaml text eol=lf
+*.md text eol=lf
+*.py text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
