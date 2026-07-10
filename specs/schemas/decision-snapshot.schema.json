@@ -36,7 +36,7 @@
           "items": {"type": "object", "required": ["id", "document_id", "field_name", "value", "confidence", "prompt", "model"],
                     "additionalProperties": false,
                     "properties": {"id": {"type": "string"}, "document_id": {"type": "string"}, "field_name": {"type": "string"},
-                                   "value": {"type": "string"}, "confidence": {"type": "number"}, "prompt": {"type": "string"}, "model": {"type": "string"}}}
+                                   "value": {"type": "string"}, "confidence": {"type": "string", "description": "Decimal string 0..1 (floats forbidden in audited payloads, NFR-2)"}, "prompt": {"type": "string"}, "model": {"type": "string"}}}
         },
         "adapter_results": {"type": "array", "items": {"type": "object", "required": ["adapter", "version", "result"], "properties": {"adapter": {"type": "string"}, "version": {"type": "string"}, "result": {"type": "object"}}, "additionalProperties": false}}
       }
