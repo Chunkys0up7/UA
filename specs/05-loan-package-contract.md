@@ -75,6 +75,8 @@ The package mirrors what a processor hands to underwriting at a large bank: URLA
 
 Full field-by-field definitions, enums, and required/optional status: `schemas/loan-package.schema.json`.
 
+**State-overlay inputs** (`17 §4`): `loan.apr`, `loan.total_points_and_fees`, `loan.lender_controlled_fees` (processor-supplied; state high-cost and TX fee tests), `property.prior_home_equity_loan_date` + `property.tx_a6_notice_date` (TX 50(a)(6)), `borrowers[].marital_status` + `non_borrowing_spouse` (community-property signature rule). `apr` and `total_points_and_fees` are REQUIRED when the property state has a high-cost overlay rule file; absent values make those rules `refer` with `RC-STATE-DATA-MISSING` (never a silent pass).
+
 ## 3. Required document coverage (validated structurally)
 
 | Situation | Required documents |

@@ -93,6 +93,18 @@ Columns: **Requirement** (what the regulation demands) → **Control** (what thi
 
 ---
 
-## 11. Traceability rule for implementers
+## 11. State law overlays (per-state regimes — full detail in `17-state-overlays.md`)
+
+| Requirement | Control | Spec | Test |
+|---|---|---|---|
+| Texas Const. art. XVI §50(a)(6) — home-equity gates (80% LTV/CLTV, fee cap, seasoning, notice, no subordinate financing, document set) | STX-001..007 overlay rules with citations; hard gates ineligible; artifacts as conditions | 17 §7.2 | T-SOV-5 |
+| State high-cost / anti-predatory laws (NY §6-l/§6-m, MA c.183C/§28C, GA FLA, HOEPA baseline) | high-cost ⇒ ineligible; covered/subprime tiers ⇒ duty artifacts (NTB worksheet, escrow, ATR docs) | 17 §7.2 | T-SOV-5 |
+| State ADMT laws (CO SB 26-189, CA CCPA ADMT) — explanation, human review, data correction on automated adverse decisions | adverse_action node appends state artifact block sourced from decision provenance | 17 §7.3 | T-SOV-6 |
+| State effects-based fair lending retained post-2026 (NY/MA/CA/IL) | monitoring flag on the fair-lending extract; never a per-loan gate | 17 §7.4, 12 §3.6 | T-HMD-3 |
+| Community property / funding model / attorney closing mechanics | flag-driven condition library (NBS signature, PTF timing, attorney package) | 17 §7.2 | T-SOV-1 |
+| Statutory traceability of every state-driven outcome | mandatory `citation` per overlay rule, rendered in UI + audit | 17 §1.3 | T-SOV-2 |
+| Reference-rate re-indexing (APOR/PMMS/Treasury/CPI) | pinned per pack version in `reference-indices.json`; production feeds from maintained parameter service | 17 §7 | T-SOV-4 |
+
+## 12. Traceability rule for implementers
 
 When any control above is touched during implementation, the PR/commit description MUST cite the requirement IDs (from `01-requirements.md`) it affects, and `15-testing-acceptance.md` MUST keep the proving test green. If a control cannot be implemented as specified, the implementer MUST NOT silently substitute — record the deviation in `specs/DEVIATIONS.md` (create on first use) with rationale and impact, and keep the compliance row pointing at the deviation entry.

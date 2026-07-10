@@ -1,0 +1,30 @@
+{
+  "comment": "State flags consumed via state.flags.* context inputs and by the adverse_action node (ADMT artifacts). Rule files exist for states with substantive overlay rules; states absent from rule_files contribute only flag-driven behavior from common.rules.json.",
+  "rule_files": {
+    "TX": "tx.rules.json",
+    "NY": "ny.rules.json",
+    "MA": "ma.rules.json",
+    "GA": "ga.rules.json",
+    "FL": "fl.rules.json",
+    "CO": "co.rules.json"
+  },
+  "community_property": ["AZ", "CA", "ID", "LA", "NV", "NM", "TX", "WA", "WI"],
+  "dry_funding": ["AK", "AZ", "CA", "HI", "ID", "NV", "NM", "OR", "WA"],
+  "attorney_closing": ["CT", "DE", "GA", "MA", "NC", "SC", "VT", "WV"],
+  "disparate_impact_monitoring": ["NY", "MA", "CA", "IL"],
+  "admt_adverse_artifact": {
+    "CO": {
+      "citation": "Colorado SB 26-189 (ADMT Act, eff. 2027-01-01)",
+      "duties": ["plain_language_explanation_30d", "human_review_request_path", "data_correction_path"]
+    },
+    "CA": {
+      "citation": "CCPA ADMT regulations (CPPA, adopted 2025-07-24; compliance 2027-01-01)",
+      "duties": ["pre_use_admt_notice", "opt_out_honored", "logic_access_response", "risk_assessment_on_file"]
+    }
+  },
+  "no_earthquake_condition": ["CA"],
+  "notes": {
+    "usury_first_lien": "No usury gate for first-lien conforming loans - preempted by DIDMCA §501 (12 CFR Part 190). Documented negative rule; junior liens out of scope v1.",
+    "hoepa_baseline": "Federal HOEPA §32 high-cost test encoded in common.rules.json HC-000 as the nationwide floor (high-cost = not GSE-deliverable)."
+  }
+}

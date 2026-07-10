@@ -1,0 +1,17 @@
+{
+  "comment": "Maintained reference-rate parameters used by high-cost/subprime spread tests. These re-index periodically (APOR weekly, PMMS weekly, Treasury daily; statutory dollar caps CPI-adjusted) - a production deployment feeds them from a maintained parameter service and legal review confirms current values. Pinned here per pack version for reproducibility (HR-7); values as of the pack effective date.",
+  "as_of": "2026-06-30",
+  "apor_30yr_fixed": "6.100",
+  "treasury_comparable_maturity": "4.250",
+  "pmms_northeast": "6.400",
+  "hoepa_first_lien_apr_spread": "6.500",
+  "ny_6l_first_lien_treasury_spread": "8.000",
+  "ny_6l_points_fees_pct": "5.000",
+  "ny_6m_first_lien_pmms_spread": "1.750",
+  "ga_points_fees_pct": "5.000",
+  "ma_183c_apr_spread_proxy": "6.500",
+  "tx_a6_max_ltv": "80.00",
+  "tx_a6_fee_cap_pct": "2.000",
+  "tx_a6_seasoning_days": 365,
+  "tx_a6_notice_days": 12
+}

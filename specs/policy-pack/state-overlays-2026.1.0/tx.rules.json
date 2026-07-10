@@ -1,0 +1,91 @@
+{
+  "ruleset": "state-tx",
+  "pack": "state-overlays-2026.1.0",
+  "comment": "Texas Section 50(a)(6) home-equity regime: any cash-out refinance on a Texas homestead (primary residence) is an 'a6' loan. Constitutional requirements - hard gates override AUS and base guidelines. Guard: all rules apply only when state=TX AND is_cash_out AND homestead.",
+  "rules": [
+    {
+      "id": "STX-001",
+      "description": "Texas 50(a)(6): LTV must not exceed 80% of fair market value on a homestead cash-out; at least 20% equity must remain",
+      "citation": "Tex. Const. art. XVI §50(a)(6)(B); Fannie Mae Selling Guide B5-4.1-03",
+      "applies": {"and": [{"==": ["property.state", "TX"]}, {"==": ["loan.is_cash_out", true]}, {"==": ["property.homestead", true]}]},
+      "inputs": ["ltv.ltv"],
+      "when": {"<=": ["ltv.ltv", "80.00"]},
+      "on_fail": {
+        "outcome": "ineligible",
+        "reason_code": "RC-STATE-TX-50A6-LTV",
+        "counteroffer": {"solve_for": "loan.amount", "target": {"<=": ["ltv.ltv", "80.00"]}}
+      },
+      "severity": "eligibility"
+    },
+    {
+      "id": "STX-002",
+      "description": "Texas 50(a)(6): CLTV including all homestead liens must not exceed 80%",
+      "citation": "Tex. Const. art. XVI §50(a)(6)(B)",
+      "applies": {"and": [{"==": ["property.state", "TX"]}, {"==": ["loan.is_cash_out", true]}, {"==": ["property.homestead", true]}]},
+      "inputs": ["ltv.cltv"],
+      "when": {"<=": ["ltv.cltv", "80.00"]},
+      "on_fail": {"outcome": "ineligible", "reason_code": "RC-STATE-TX-50A6-LTV"},
+      "severity": "eligibility"
+    },
+    {
+      "id": "STX-003",
+      "description": "Texas 50(a)(6): no simultaneous subordinate financing may be created with an a6 loan",
+      "citation": "Tex. Const. art. XVI §50(a)(6); Fannie Mae B5-4.1-03 (HELOC subordinate financing prohibited)",
+      "applies": {"and": [{"==": ["property.state", "TX"]}, {"==": ["loan.is_cash_out", true]}, {"==": ["property.homestead", true]}]},
+      "inputs": ["state.subordinate_lien_count"],
+      "when": {"==": ["state.subordinate_lien_count", 0]},
+      "on_fail": {"outcome": "ineligible", "reason_code": "RC-STATE-TX-50A6-SUBORDINATE"},
+      "severity": "eligibility"
+    },
+    {
+      "id": "STX-004",
+      "description": "Texas 50(a)(6): lender-controlled fees must not exceed 2% of the loan amount (bona fide third-party appraisal/survey/title excluded)",
+      "citation": "Tex. Const. art. XVI §50(a)(6)(E)",
+      "applies": {"and": [{"==": ["property.state", "TX"]}, {"==": ["loan.is_cash_out", true]}, {"==": ["property.homestead", true]}]},
+      "inputs": ["loan.lender_fees_pct"],
+      "when": {"<=": ["loan.lender_fees_pct", "2.000"]},
+      "on_fail": {
+        "outcome": "refer",
+        "reason_code": "RC-STATE-TX-50A6-FEES",
+        "note": "curable - condition to reduce lender-controlled fees to the 2% cap before closing",
+        "artifact": {"id": "TX-FEE-CURE", "category": "PTD", "text_template": "Reduce lender-controlled fees to no more than 2% of the loan amount ({cap_amount}) and provide a corrected fee itemization."}
+      },
+      "severity": "documentation"
+    },
+    {
+      "id": "STX-005",
+      "description": "Texas 50(a)(6): a new a6 loan may not close within 12 months of a prior a6 loan on the same homestead (once-per-year limit)",
+      "citation": "Tex. Const. art. XVI §50(a)(6)(M)(iii)",
+      "applies": {"and": [{"==": ["property.state", "TX"]}, {"==": ["loan.is_cash_out", true]}, {"==": ["property.homestead", true]}, {"present": "state.prior_a6_days"}]},
+      "inputs": ["state.prior_a6_days"],
+      "when": {">=": ["state.prior_a6_days", 365]},
+      "on_fail": {"outcome": "ineligible", "reason_code": "RC-STATE-TX-50A6-SEASONING"},
+      "severity": "eligibility"
+    },
+    {
+      "id": "STX-006",
+      "description": "Texas 50(a)(6): the 12-day 'Notice Concerning Extensions of Credit' must be on file; closing may not occur until 12 days after borrower receipt",
+      "citation": "Tex. Const. art. XVI §50(a)(6)(M)(i)",
+      "applies": {"and": [{"==": ["property.state", "TX"]}, {"==": ["loan.is_cash_out", true]}, {"==": ["property.homestead", true]}]},
+      "inputs": ["state.tx_notice_on_file"],
+      "when": {"==": ["state.tx_notice_on_file", true]},
+      "on_fail": {
+        "outcome": "refer",
+        "reason_code": "RC-STATE-DATA-MISSING",
+        "artifact": {"id": "TX-12DAY-NOTICE", "category": "PTD", "text_template": "Provide evidence the §50(a)(6) 12-day notice was delivered to all owners; closing may not occur earlier than 12 days after receipt."}
+      },
+      "severity": "documentation"
+    },
+    {
+      "id": "STX-007",
+      "description": "Texas 50(a)(6): required closing documentation - Texas Home Equity Security Instrument (Form 3044.1), Texas Home Equity Affidavit (Form 3185), and title policy T-42 + T-42.1 endorsements; new full appraisal required (no value acceptance)",
+      "citation": "Fannie Mae B5-4.1-03; TDI title endorsements T-42/T-42.1",
+      "applies": {"and": [{"==": ["property.state", "TX"]}, {"==": ["loan.is_cash_out", true]}, {"==": ["property.homestead", true]}]},
+      "inputs": ["property.state"],
+      "when": {"present": "property.state"},
+      "on_fail": {"outcome": "refer", "reason_code": "RC-STATE-DATA-MISSING"},
+      "artifact_always": {"id": "TX-A6-DOCSET", "category": "PTF", "text_template": "Texas 50(a)(6) closing package required: Form 3044.1 security instrument, Form 3185 affidavit, title endorsements T-42 and T-42.1, and full appraisal (value acceptance not permitted)."},
+      "severity": "documentation"
+    }
+  ]
+}

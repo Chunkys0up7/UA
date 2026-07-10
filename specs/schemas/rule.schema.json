@@ -34,6 +34,16 @@
         {"$ref": "#/$defs/table_lookup"}
       ]
     },
+    "artifact": {
+      "type": "object",
+      "required": ["id", "category", "text_template"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string"},
+        "category": {"enum": ["PTA", "PTD", "PTF"]},
+        "text_template": {"type": "string"}
+      }
+    },
     "table_lookup": {
       "type": "object",
       "required": ["table"],
@@ -88,6 +98,8 @@
         "properties": {
           "id": {"type": "string", "pattern": "^[A-Z]+-[0-9]{3}$"},
           "description": {"type": "string"},
+          "citation": {"type": "string", "description": "Statutory/regulatory authority. REQUIRED on state-overlay rules (17 §7.1); optional on base rules."},
+          "applies": {"$ref": "#/$defs/predicate", "description": "Guard predicate; when false the rule records outcome not_applicable (17 §7.1)."},
           "inputs": {"type": "array", "items": {"type": "string"}},
           "when": {"$ref": "#/$defs/predicate"},
           "on_fail": {
@@ -96,8 +108,9 @@
             "additionalProperties": false,
             "properties": {
               "outcome": {"enum": ["ineligible", "refer"]},
-              "reason_code": {"type": "string", "pattern": "^RC-[A-Z-]+$"},
+              "reason_code": {"type": "string", "pattern": "^RC-[A-Z0-9-]+$"},
               "note": {"type": "string"},
+              "artifact": {"$ref": "#/$defs/artifact"},
               "counteroffer": {
                 "type": "object",
                 "required": ["solve_for", "target"],
@@ -106,6 +119,7 @@
               }
             }
           },
+          "artifact_always": {"$ref": "#/$defs/artifact", "description": "Condition synthesized whenever applies matches, independent of pass/fail (17 §7.1)."},
           "severity": {"enum": ["eligibility", "documentation", "informational"]}
         }
       }

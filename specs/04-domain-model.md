@@ -72,6 +72,7 @@ CREATE TABLE loan_applications (
   note_rate TEXT NOT NULL, term_months INTEGER NOT NULL,
   mlo_nmls_id TEXT NOT NULL,
   policy_pack_version TEXT NOT NULL,                           -- pinned at acceptance (FR-PKG-3)
+  state_overlay_pack_version TEXT NOT NULL,                    -- pinned at acceptance (FR-STA-4)
   county_high_cost INTEGER NOT NULL DEFAULT 0,
   received_at TEXT NOT NULL, review_started_at TEXT, decision_ready_at TEXT, decided_at TEXT,
   package_json TEXT NOT NULL                                   -- the accepted raw package (immutable copy)

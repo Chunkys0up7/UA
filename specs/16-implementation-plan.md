@@ -24,6 +24,7 @@ UA/
 ├── specs/                          # this package (immutable during build except DEVIATIONS.md)
 ├── policy/
 │   ├── packs/conforming-2026.1.0/  # verbatim copy of specs/policy-pack/conforming-2026.1.0
+│   ├── packs/state-overlays-2026.1.0/ # verbatim copy of specs/policy-pack/state-overlays-2026.1.0
 │   ├── prompts/                    # verbatim copy of specs/prompts
 │   └── aus/du-sim.v1.json          # verbatim copy of specs/policy-pack/aus/du-sim.v1.json
 ├── backend/
@@ -69,7 +70,8 @@ If `useLangGraphInterrupt` fails against the ag-ui mount: switch to the pre-spec
 **Gate:** T-CAL-1..8 green (goldens include every `06` worked example).
 
 ### Phase 2 — Policy engine + pack
-`policy_engine/` + pack loader + `conforming-2026.1.0` copy + compensating factors.
+`policy_engine/` + pack loader + `conforming-2026.1.0` and `state-overlays-2026.1.0` copies + compensating factors + overlay semantics (`applies`/`not_applicable`, citations, artifacts — 17 §7.1).
+**Gate additions:** T-SOV-1..5 alongside the base T-POL suite.
 **Gate:** T-POL-1..7 green.
 
 ### Phase 3 — Audit ledger + snapshots
@@ -77,7 +79,7 @@ If `useLangGraphInterrupt` fails against the ag-ui mount: switch to the pre-spec
 **Gate:** T-AUD-1..3, T-REP-1 (replay over hand-built snapshot fixtures until Phase 5 provides real ones — fixture-first is acceptable).
 
 ### Phase 4 — Synthetic data + adapters + LLM layer
-`synthetic/` (archetypes, renderers, boundary sweep, corpus CLI) → commit the 12 goldens to `data/loans/`; adapters; `llm/` (protocol, mock, anthropic, prompt registry).
+`synthetic/` (archetypes, renderers, boundary sweep, corpus CLI) → commit the 15 goldens to `data/loans/`; adapters; `llm/` (protocol, mock, anthropic, prompt registry).
 **Gate:** T-DAT-1/2 (generation + expected-outcome fixtures), T-EXT-1..3, T-LLM-1..3, T-ADP-1.
 
 ### Phase 5 — Full graph
@@ -92,7 +94,7 @@ All components per `13`; REST endpoints per `12` (built alongside as needed from
 PII masking verification, COMPLIANCE.md finalized from `02` with any DEVIATIONS, README (bootstrap, backup/retention procedure), ARCHITECTURE.md (incl. AI inventory `03 §8`), CHANGELOG, `verify-audit.ps1`, `xref-lint.py`.
 **Gate:** `15 §3` acceptance gates 1–5 all green.
 
-Commit discipline: capability-grouped commits at each gate minimum; cite requirement IDs in messages (`02 §11`).
+Commit discipline: capability-grouped commits at each gate minimum; cite requirement IDs in messages (`02 §12`).
 
 ## 4. Scripts
 
@@ -112,7 +114,7 @@ Commit discipline: capability-grouped commits at each gate minimum; cite require
 | 4 | LLM nondeterminism contaminates decisions | HR-1 architecture; mock provider CI default; rules read persisted fields only (T-TOP-2); provider-swap regression must show zero decision diffs (`10 §6`) |
 | 5 | Hash-chain mismatch across platforms | Single canonical-JSON implementation (`11 §4.1`); cross-platform vector in T-AUD-2 |
 | 6 | Windows friction (paths, wheels) | SQLite default; uv-managed 3.12; PowerShell scripts; Docker optional |
-| 7 | Spec drift during build | specs/ immutable during build; deviations only via DEVIATIONS.md with compliance-row linkage (`02 §11`) |
+| 7 | Spec drift during build | specs/ immutable during build; deviations only via DEVIATIONS.md with compliance-row linkage (`02 §12`) |
 
 ## 6. Performance budgets (NFR-6)
 

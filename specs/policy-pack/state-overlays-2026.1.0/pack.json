@@ -1,0 +1,18 @@
+{
+  "pack_id": "state-overlays",
+  "version": "2026.1.0",
+  "effective_date": "2026-01-01",
+  "description": "State overlay rule pack: representative per-state underwriting constraints layered over the base conforming pack (17-state-overlays.md). Overlays only tighten; every rule cites its statute. Immutable once released.",
+  "files": {
+    "co.rules.json": "7dd7fb72e8dabb8035dd7a3d01ea3f7594ad06111664dc8ba50b26c3684eb876",
+    "common.rules.json": "ec833681b3427f3f6967bf92c369400a5af82f6ff064b6c2c3dc660cdf119308",
+    "fl.rules.json": "e4aed0a1b1efaafaf70868999727ab72ec1672acce06dac9bcaba713b7bb487e",
+    "ga.rules.json": "7ce725b02a167d07d46b6b0314fb94a319d56adf7d0c2a7032367b6db07e757c",
+    "ma.rules.json": "8c05c1e767b70964ed5f3c4155ff030e3b9859829d3e83fae1e2856a2152c811",
+    "ny.rules.json": "75f511bb80ee902bacb8d80dd1b6a0919b3df511af1d7e22f50c4be0b2fae418",
+    "reason-codes.state.json": "fff03f1545ffb7e0394f951a51f295a87b6d8b5192667c6694c735c13cc02fe0",
+    "reference-indices.json": "13250a703064d1518b27d6968d226cb7054b6d6d27e78ed834964cb2aa8b30fc",
+    "states-index.json": "093cca641ab2edc8b6646225a76c0b45dda11ba896f9390390aa59baf75cdd40",
+    "tx.rules.json": "abaeb636f04c51b2398afa4d23d7ae80fd53665dc753cd0c85e2e04f05e36903"
+  }
+}

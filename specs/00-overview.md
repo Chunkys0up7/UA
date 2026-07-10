@@ -56,9 +56,11 @@ Every implementation decision defers to these. Each has at least one enforcing t
 6. `10-llm-usage-register.md`, `11-audit-repeatability.md` — the two governance pillars.
 7. `12-api-contracts.md`, `13-frontend-workbench.md` — the surface.
 8. `14-synthetic-data.md`, `15-testing-acceptance.md`, `16-implementation-plan.md` — data, proof, and build order. **Follow the phase gates in 16 strictly; Phase 0 must pass before any domain code is written.**
+9. `17-state-overlays.md` — the state-by-state rules layer (mechanism + shipped `state-overlays-2026.1.0` pack). Read alongside 07; overlays evaluate in the same engine.
 
 Machine-readable artifacts (normative, not illustrative):
-- `policy-pack/conforming-2026.1.0/` — the actual rule pack the system ships with.
+- `policy-pack/conforming-2026.1.0/` — the actual base rule pack the system ships with.
+- `policy-pack/state-overlays-2026.1.0/` — the state overlay pack (per-state rules with statutory citations).
 - `prompts/` — versioned prompt definitions.
 - `schemas/` — JSON Schemas for the loan package, rules, audit events, decision snapshots, interrupt/resume payloads, and agent state.
 

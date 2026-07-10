@@ -1,0 +1,50 @@
+{
+  "ruleset": "state-common",
+  "pack": "state-overlays-2026.1.0",
+  "comment": "Nationwide state-mechanics rules driven by states-index flags, plus the federal HOEPA baseline that all state high-cost tests sit on.",
+  "rules": [
+    {
+      "id": "SHC-000",
+      "description": "Federal HOEPA §32 high-cost baseline: first-lien APR spread over APOR above 6.5 points makes the loan high-cost and not GSE-deliverable - not originated under this program",
+      "citation": "15 U.S.C. §1639 / 12 CFR 1026.32; GSE ineligibility for HOEPA loans",
+      "applies": {"present": "property.state"},
+      "inputs": ["apor.spread"],
+      "when": {"<=": ["apor.spread", "6.500"]},
+      "on_fail": {"outcome": "ineligible", "reason_code": "RC-STATE-HIGHCOST"},
+      "severity": "eligibility"
+    },
+    {
+      "id": "SCP-001",
+      "description": "Community property states: a married borrower whose spouse is not on the loan requires the non-borrowing spouse to sign the security instrument, right of rescission, and TIL to perfect the lien (no DTI impact for conventional loans)",
+      "citation": "Community property law of AZ/CA/ID/LA/NV/NM/TX/WA/WI; marital signature requirements",
+      "applies": {"and": [{"==": ["state.flags.community_property", true]}, {"==": ["borrowers.non_borrowing_spouse_present", true]}]},
+      "inputs": ["borrowers.non_borrowing_spouse_present"],
+      "when": {"present": "borrowers.non_borrowing_spouse_present"},
+      "on_fail": {"outcome": "refer", "reason_code": "RC-STATE-DATA-MISSING"},
+      "artifact_always": {"id": "CP-NBS-SIGN", "category": "PTF", "text_template": "Non-borrowing spouse must sign the security instrument, right of rescission, and TIL disclosure (community property state)."},
+      "severity": "documentation"
+    },
+    {
+      "id": "SFN-001",
+      "description": "Dry-funding state: funds disburse after closing once all conditions verified - all prior-to-funding conditions must clear before disbursement",
+      "citation": "State funding practice (AK/AZ/CA/HI/ID/NV/NM/OR/WA)",
+      "applies": {"==": ["state.flags.dry_funding", true]},
+      "inputs": ["property.state"],
+      "when": {"present": "property.state"},
+      "on_fail": {"outcome": "refer", "reason_code": "RC-STATE-DATA-MISSING"},
+      "artifact_always": {"id": "FUND-DRY", "category": "PTF", "text_template": "Dry-funding state: all prior-to-funding conditions must be cleared and documents reviewed before disbursement."},
+      "severity": "informational"
+    },
+    {
+      "id": "SAT-001",
+      "description": "Attorney-closing state: closing documents must be prepared or reviewed by a licensed attorney",
+      "citation": "State attorney-closing requirements (CT/DE/GA/MA/NC/SC/VT/WV)",
+      "applies": {"==": ["state.flags.attorney_closing", true]},
+      "inputs": ["property.state"],
+      "when": {"present": "property.state"},
+      "on_fail": {"outcome": "refer", "reason_code": "RC-STATE-DATA-MISSING"},
+      "artifact_always": {"id": "ATTY-CLOSE", "category": "PTD", "text_template": "Attorney-closing state: closing package must be prepared/reviewed by a licensed attorney; provide attorney/title opinion."},
+      "severity": "informational"
+    }
+  ]
+}

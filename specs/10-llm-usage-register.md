@@ -89,7 +89,7 @@ To replace Anthropic with provider X:
 
 1. Implement `LLMClient` in a new `x_client.py` (the only file importing X's SDK). Map: system+user prompting, JSON-mode/structured output for extraction, tool-use loop for chat. Register in `config.py` provider table.
 2. Grep-audit: `anthropic` must appear **only** in `anthropic_client.py`, `requirements.txt`, and this spec (T-LLM-3 is the automated version).
-3. Re-run the eval gates: extraction goldens across all 12 archetypes (field-level exact match on mock-comparable fields; ≥ 98% numeric-field exact match on live provider vs ground truth), condition-draft schema conformance, chat tool-selection smoke set.
+3. Re-run the eval gates: extraction goldens across all 15 archetypes (field-level exact match on mock-comparable fields; ≥ 98% numeric-field exact match on live provider vs ground truth), condition-draft schema conformance, chat tool-selection smoke set.
 4. Update `LLM_MODEL` + this register's **[ANTHROPIC-SPECIFIC]** notes; bump register version header.
 5. Decisions are unaffected by construction (HR-1) — but run the corpus regression (T-DAT-3) and diff decision distributions to prove it: **the report must show zero decision-level differences** (only extraction confidence/narrative text may differ).
 

@@ -11,7 +11,7 @@ Every test ID below is referenced from `01-requirements.md`; every FR/NFR maps t
 - **T-PKG-2**: referential-integrity fixtures (dangling doc_id, two primaries, purchase without price) → 422 naming the violation (FR-PKG-2). Appraised value flows from package only (appraisal-independence row, `02 §9`).
 
 ### Extraction & LLM governance
-- **T-EXT-1**: mock-provider extraction over all 12 archetypes matches `ground_truth` exactly, field-level (golden). Live-provider variant (opt-in, `LLM_PROVIDER=anthropic`): ≥ 98% numeric-field exact match (FR-EXT-1).
+- **T-EXT-1**: mock-provider extraction over all 15 archetypes matches `ground_truth` exactly, field-level (golden). Live-provider variant (opt-in, `LLM_PROVIDER=anthropic`): ≥ 98% numeric-field exact match (FR-EXT-1).
 - **T-EXT-2**: prompt returning schema-invalid JSON (mock injected) → one retry → `extraction_failed` + condition (FR-EXT-3).
 - **T-EXT-3**: two runs of the same package (mock) produce identical extracted fields (FR-EXT-4, FR-LLM-4).
 - **T-LLM-1**: register exhaustiveness — grep/AST scan: no `LLMClient` call site outside register rows; runtime rejects unregistered prompt_id; no LLM imports under `policy_engine/`, `aus/`, `domain/`, `audit/` (FR-LLM-3, HR-1).
@@ -90,16 +90,24 @@ Every test ID below is referenced from `01-requirements.md`; every FR/NFR maps t
 - **T-UI-3**: decision-form validation mirrors server rules — reason-code picker limited to eligible codes, override justification, four-eyes fields (FR-UI-3, `02 §9` UDAAP row).
 - **T-UI-4**: audit timeline shows verify badge, replay result, filters, and export (FR-UI-4).
 
+### State overlays
+- **T-SOV-1**: overlay rules produce standard `RuleEvaluationRecord`s; guarded-out rules record `not_applicable`; an overlay eligibility failure flows to rollup/packet/adverse action identically to base failures (FR-STA-1).
+- **T-SOV-2**: pack lint — every overlay rule has a non-empty `citation` (fixture without one fails load); no overlay rule reads any input beyond the documented context vocabulary + state additions (FR-STA-2, -6).
+- **T-SOV-3**: most-restrictive-wins — a loan passing all base rules but failing STX-001 is ineligible; no API or pack mechanism can suppress a base rule (grep/AST: no override construct exists) (FR-STA-3).
+- **T-SOV-4**: overlay manifest tamper rejected at load; DecisionSnapshot carries `state_overlay_pack` + manifest sha; replay covers overlay evaluations (FR-STA-4, extends T-REP-1).
+- **T-SOV-5**: state-selection goldens — the identical loan evaluated with property.state TX vs OH produces overlay findings only for TX; TX boundary sweep (LTV 79.99/80.00/80.01 on a6, fees 1.999/2.000/2.001%, seasoning 364/365/366 days); NY/MA/GA high-cost trigger fixtures; archetype #13–15 expected outcomes (FR-STA-5).
+- **T-SOV-6**: decline in CO/CA appends the ADMT artifact block to the adverse-action package with provenance references; decline in OH does not (FR-STA-7).
+
 ### Synthetic data
 - **T-DAT-1**: same seed → byte-identical generator output (hash the output tree) (FR-DAT-1, -4).
-- **T-DAT-2**: 12 archetype expected-outcome assertions (the `14 §4` table is the fixture) (FR-DAT-2).
+- **T-DAT-2**: 15 archetype expected-outcome assertions (the `14 §4` table is the fixture) (FR-DAT-2).
 - **T-DAT-3**: corpus run — ≥ 500 packages: 100% pipeline completion, 100% chain verification, 100% replay-identical, boundary-case table all-correct, distribution report generated (FR-DAT-3, `02 §6/§7`).
 - **T-PER-1** *(SHOULD)*: single-run ≤ 10 s, corpus ≤ 20 min, laptop-class hardware (NFR-6).
 - **T-ENV-1**: fresh-clone bootstrap on Windows (scripts only, no Docker) reaches a passing T-P0-1 (NFR-5).
 
 ## 2. Demo script (UI acceptance — `docs/demo-script.md`)
 
-1. `scripts/dev.ps1` → both services up → `/pipeline` lists the 12 archetypes.
+1. `scripts/dev.ps1` → both services up → `/pipeline` lists the 15 archetypes.
 2. Open `borderline-dti-compensating` → Run → watch the 13-stage stepper stream live.
 3. 4 Cs tab: click **back-DTI 48.5%** → lineage popover → expand to the paystub extraction (confidence, prompt@v1, model id) → open document with highlight.
 4. Rules tab: DTI-001 pass via compensating branch, inputs visible. ATR tab: 8 factors green.

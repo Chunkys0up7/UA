@@ -172,7 +172,19 @@ Status values used below: all requirements are **mandatory** unless marked *(SHO
 | FR-DAT-3 | The corpus generator MUST produce ≥ 500 packages spanning rule boundaries (values at, just below, and just above every numeric threshold in the pack). | 14 §5 | T-DAT-3 |
 | FR-DAT-4 | Same seed → byte-identical output (no wall-clock, no unseeded randomness). | 14 §2 | T-DAT-1 |
 
-## 18. Non-functional requirements (NFR)
+## 18. State overlays (FR-STA)
+
+| ID | Requirement | Spec | Test |
+|----|-------------|------|------|
+| FR-STA-1 | State overlay rules MUST evaluate in the same engine, produce the same `RuleEvaluationRecord`s (with outcome `not_applicable` when their `applies` guard is false), bind reason codes, and flow into the decision packet, adverse action, audit, and snapshot identically to base rules. | 17 §1, §3 | T-SOV-1 |
+| FR-STA-2 | Every overlay rule MUST carry a `citation` naming its statutory authority; a pack containing an uncited overlay rule MUST fail load validation. Citations render in the workbench rules table. | 17 §1, §7.1 | T-SOV-2 |
+| FR-STA-3 | Overlays MUST only tighten: no overlay mechanism may relax, override, or suppress a base-pack rule (most-restrictive-wins by construction). | 17 §1 | T-SOV-3 |
+| FR-STA-4 | The overlay pack MUST be versioned with its own sha256 manifest, pinned at intake alongside the base pack, and recorded in every evaluation and the DecisionSnapshot (HR-7). | 17 §2, §3 | T-SOV-4 |
+| FR-STA-5 | The shipped `state-overlays-2026.1.0` pack MUST implement the rule set in `17 §7.2` (TX 50(a)(6) gates, NY §6-l/§6-m, MA c.183C/§28C, GA FLA, FL insurance, CO ADMT, community-property/funding/attorney flags, HOEPA baseline). | 17 §7, policy-pack/ | T-SOV-5 |
+| FR-STA-6 | `property.state` MUST be used solely to select applicable state law; overlay rules MUST NOT risk-differentiate beyond the cited statute (fair-lending posture, `02 §4`); NY/MA/CA/IL loans carry the effects-based monitoring flag on the monitoring extract. | 17 §1.4, §7.4 | T-SOV-2, T-HMD-3 |
+| FR-STA-7 | On decline in a state flagged `admt_adverse_artifact` (CO, CA), the adverse-action package MUST include the state-required ADMT artifacts (explanation, human-review path, data-correction path / notice references) sourced from actual decision provenance. | 17 §7.3 | T-SOV-6 |
+
+## 19. Non-functional requirements (NFR)
 
 | ID | Requirement | Spec | Test |
 |----|-------------|------|------|

@@ -23,6 +23,9 @@
         "occupancy": {"enum": ["primary", "second_home", "investment"]},
         "loan_type": {"const": "conventional_conforming"},
         "note_rate": {"$ref": "#/$defs/rate"},
+        "apr": {"$ref": "#/$defs/rate", "description": "processor-supplied APR; used by state high-cost tests (17 §4)"},
+        "total_points_and_fees": {"$ref": "#/$defs/money", "description": "processor-supplied points-and-fees total (state high-cost tests)"},
+        "lender_controlled_fees": {"$ref": "#/$defs/money", "description": "lender/broker-controlled fees excluding bona fide third-party charges (TX 50(a)(6) 2% test)"},
         "term_months": {"type": "integer", "minimum": 120, "maximum": 480},
         "mlo_nmls_id": {"type": "string", "pattern": "^[0-9]{4,10}$"},
         "county_high_cost": {"type": "boolean"}
@@ -62,7 +65,9 @@
         "annual_hazard_insurance": {"$ref": "#/$defs/money"},
         "hazard_policy_type": {"enum": ["owner_occupied", "landlord_rental"], "default": "owner_occupied"},
         "monthly_hoa": {"$ref": "#/$defs/money"},
-        "flood_zone_sidecar": {"type": "string", "description": "consumed only by the simulated flood adapter"}
+        "flood_zone_sidecar": {"type": "string", "description": "consumed only by the simulated flood adapter"},
+        "prior_home_equity_loan_date": {"$ref": "#/$defs/date", "description": "closing date of any prior TX 50(a)(6) lien on this homestead (STX-005 seasoning)"},
+        "tx_a6_notice_date": {"$ref": "#/$defs/date", "description": "date the TX 12-day notice was delivered (STX-006)"}
       }
     },
     "borrowers": {
@@ -78,6 +83,8 @@
           "dob": {"$ref": "#/$defs/date"},
           "is_primary": {"type": "boolean"},
           "self_employed": {"type": "boolean"},
+          "marital_status": {"enum": ["married", "unmarried", "separated"], "description": "community-property NBS signature rule (SCP-001)"},
+          "non_borrowing_spouse": {"type": "boolean", "description": "married with spouse not on this loan (SCP-001)"},
           "employment": {
             "type": "array",
             "items": {

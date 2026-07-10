@@ -11,11 +11,13 @@
     "sealed_at": {"type": "string"},
     "versions": {
       "type": "object",
-      "required": ["policy_pack", "policy_pack_manifest_sha256", "prompts", "model_ids", "aus_simulator", "code_git_sha", "llm_provider"],
+      "required": ["policy_pack", "policy_pack_manifest_sha256", "state_overlay_pack", "state_overlay_manifest_sha256", "prompts", "model_ids", "aus_simulator", "code_git_sha", "llm_provider"],
       "additionalProperties": false,
       "properties": {
         "policy_pack": {"type": "string"},
         "policy_pack_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "state_overlay_pack": {"type": "string"},
+        "state_overlay_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
         "prompts": {"type": "object", "additionalProperties": {"type": "integer"}},
         "model_ids": {"type": "array", "items": {"type": "string"}},
         "aus_simulator": {"type": "string"},
@@ -59,7 +61,7 @@
       "required": ["evaluations", "overall", "counteroffer_hints"],
       "additionalProperties": false,
       "properties": {
-        "evaluations": {"type": "array", "items": {"type": "object", "required": ["rule_id", "outcome"], "properties": {"rule_id": {"type": "string"}, "outcome": {"enum": ["pass", "fail", "refer"]}, "reason_code": {"type": ["string", "null"]}, "inputs": {"type": "array"}}}},
+        "evaluations": {"type": "array", "items": {"type": "object", "required": ["rule_id", "outcome"], "properties": {"rule_id": {"type": "string"}, "outcome": {"enum": ["pass", "fail", "refer", "not_applicable"]}, "reason_code": {"type": ["string", "null"]}, "inputs": {"type": "array"}}}},
         "overall": {"enum": ["eligible", "ineligible", "refer"]},
         "counteroffer_hints": {"type": "array", "items": {"type": "object"}}
       }
