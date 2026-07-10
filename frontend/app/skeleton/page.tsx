@@ -122,7 +122,7 @@ export default function SkeletonGatePage() {
 
       {interruptPacket && (
         <div data-testid="decision-gate" style={{ border: "2px solid #b45309", borderRadius: 8, padding: 16, margin: "16px 0" }}>
-          <h3 style={{ fontWeight: 700 }}>⏸ Decision gate (interrupt received)</h3>
+          <h3 style={{ fontWeight: 700 }}>Decision gate (interrupt received)</h3>
           <pre style={{ fontSize: 12, background: "#f5f5f4", padding: 8, overflowX: "auto" }}>
             {JSON.stringify(interruptPacket, null, 2)}
           </pre>

@@ -84,7 +84,7 @@ export function TracedNumber({
                 setOpen(false);
               }}
             >
-              ✕
+              ×
             </button>
           </div>
           {error && <p className="text-xs text-red-600">{error}</p>}

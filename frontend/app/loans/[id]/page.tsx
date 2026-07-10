@@ -105,7 +105,7 @@ export default function LoanPage({ params }: { params: { id: string } }) {
   return (
     <main className="mx-auto max-w-6xl p-6">
       <Link href="/pipeline" className="text-sm text-blue-700 hover:underline">
-        ← Pipeline
+        Back to pipeline
       </Link>
       <header className="mb-4 mt-1 flex flex-wrap items-center gap-4">
         <div>
@@ -129,7 +129,7 @@ export default function LoanPage({ params }: { params: { id: string } }) {
             onClick={runUnderwriting}
             className="rounded-lg bg-blue-700 px-5 py-2 font-bold text-white hover:bg-blue-800 disabled:bg-stone-400"
           >
-            {busy ? "Underwriting…" : "▶ Run underwriting"}
+            {busy ? "Underwriting…" : "Run underwriting"}
           </button>
         )}
       </header>
@@ -164,7 +164,7 @@ export default function LoanPage({ params }: { params: { id: string } }) {
             }`}
           >
             {name}
-            {name === "Decision" && interruptPacket ? " ⏸" : ""}
+            {name === "Decision" && interruptPacket ? " (pending)" : ""}
           </button>
         ))}
       </nav>

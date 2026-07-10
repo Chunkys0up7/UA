@@ -75,7 +75,6 @@ export default function PipelinePage() {
                   <span
                     className={`rounded-full px-2 py-0.5 text-xs font-bold ${STATUS_CHIP[row.status] ?? "bg-stone-100"}`}
                   >
-                    {row.interrupted ? "⏸ " : ""}
                     {row.status.replace(/_/g, " ")}
                   </span>
                 </td>

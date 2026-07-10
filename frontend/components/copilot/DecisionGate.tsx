@@ -61,7 +61,7 @@ export function DecisionGate({
       data-testid="decision-gate"
       className="rounded-xl border-2 border-amber-600 bg-amber-50/50 p-5 shadow-lg"
     >
-      <h3 className="text-lg font-extrabold">⏸ Underwriting decision required</h3>
+      <h3 className="text-lg font-extrabold">Underwriting decision required</h3>
       <p className="mt-1 text-sm">
         Suggested action:{" "}
         <span className="rounded bg-stone-800 px-2 py-0.5 font-bold text-white">

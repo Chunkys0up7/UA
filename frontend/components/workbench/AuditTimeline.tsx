@@ -5,13 +5,14 @@
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/api";
 
-const TYPE_ICON: Record<string, string> = {
-  package_accepted: "📦", state_change: "🔀", llm_call: "🤖",
-  adapter_call: "🔌", discrepancy_found: "⚖️", red_flag: "🚩",
-  rule_eval_batch: "📏", aus_run: "🎯", condition_created: "📋",
-  decision_packet_ready: "📨", human_action: "🧑‍⚖️", override: "✍️",
-  adverse_action_generated: "📜", hmda_action_taken: "🏛️",
-  tool_call: "🔧", node_error: "💥", seal: "🔏",
+// Sober uppercase tags — no pictographs (banking UI standard).
+const TYPE_TAG: Record<string, string> = {
+  package_accepted: "INTAKE", state_change: "STATE", llm_call: "LLM",
+  adapter_call: "ADAPTER", discrepancy_found: "DISCREPANCY", red_flag: "FLAG",
+  rule_eval_batch: "RULES", aus_run: "AUS", condition_created: "CONDITION",
+  decision_packet_ready: "PACKET", human_action: "HUMAN", override: "OVERRIDE",
+  adverse_action_generated: "NOTICE", hmda_action_taken: "HMDA",
+  tool_call: "TOOL", node_error: "ERROR", seal: "SEAL",
 };
 
 const GROUPS: Record<string, string[]> = {
@@ -57,7 +58,7 @@ export function AuditTimeline({ applicationId }: { applicationId: string }) {
               data-testid="chain-badge"
               className="rounded-full bg-emerald-100 px-3 py-1 text-sm font-bold text-emerald-800"
             >
-              ✓ Chain verified ({verify.events_total} events,{" "}
+              Chain verified ({verify.events_total} events,{" "}
               {verify.app_events} this loan)
             </span>
           ) : (
@@ -65,12 +66,12 @@ export function AuditTimeline({ applicationId }: { applicationId: string }) {
               data-testid="chain-badge"
               className="rounded-full bg-red-600 px-3 py-1 text-sm font-bold text-white"
             >
-              ✗ INTEGRITY FAILURE at seq {verify.first_broken_seq}
+              INTEGRITY FAILURE at seq {verify.first_broken_seq}
             </span>
           ))}
         {verify?.sealed && (
           <span className="rounded-full bg-stone-800 px-3 py-1 text-xs font-mono text-white">
-            🔏 sealed {verify.snapshot_hash?.slice(0, 16)}…
+            SEALED {verify.snapshot_hash?.slice(0, 16)}…
           </span>
         )}
         {verify?.sealed && (
@@ -92,15 +93,15 @@ export function AuditTimeline({ applicationId }: { applicationId: string }) {
             }`}
           >
             {replayResult.identical
-              ? "✓ Reproducible — byte-identical outcome"
-              : `✗ DIVERGED: ${replayResult.diffs[0] ?? ""}`}
+              ? "Reproducible — byte-identical outcome"
+              : `DIVERGED: ${replayResult.diffs[0] ?? ""}`}
           </span>
         )}
         <a
           href={api.exportUrl(applicationId)}
           className="ml-auto rounded border border-stone-300 px-3 py-1 text-sm hover:bg-stone-50"
         >
-          ⬇ Export audit file
+          Export audit file
         </a>
       </div>
 
@@ -122,7 +123,7 @@ export function AuditTimeline({ applicationId }: { applicationId: string }) {
           onClick={() => void refresh()}
           className="ml-auto rounded px-2 py-0.5 text-xs text-stone-500 hover:bg-stone-100"
         >
-          ↻ refresh
+          Refresh
         </button>
       </div>
 
@@ -138,7 +139,9 @@ export function AuditTimeline({ applicationId }: { applicationId: string }) {
                 setExpanded(expanded === event.seq ? null : event.seq)
               }
             >
-              <span>{TYPE_ICON[event.event_type] ?? "•"}</span>
+              <span className="w-24 shrink-0 rounded bg-stone-100 px-1.5 py-0.5 text-center font-mono text-[10px] font-bold text-stone-600">
+                {TYPE_TAG[event.event_type] ?? "EVENT"}
+              </span>
               <span className="font-mono text-xs text-stone-400">
                 #{event.seq}
               </span>

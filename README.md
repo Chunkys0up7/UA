@@ -68,7 +68,7 @@ Everything above runs with **zero API keys** — the mock provider returns each 
 ## A 3-minute tour
 
 1. Open **http://localhost:3000** → the pipeline lists 15 archetype loans (clean approvals, a Texas 50(a)(6) seasoning decline, a NY high-cost decline, fraud red flags, a counteroffer candidate…).
-2. Open any loan with status **received** → click **▶ Run underwriting**. The pipeline extracts documents, re-computes income/DTI/LTV/reserves with full lineage, evaluates both rule packs, runs the AUS simulator, and stops at the **decision gate** — no loan ever decides itself.
+2. Open any loan with status **received** → click **Run underwriting**. The pipeline extracts documents, re-computes income/DTI/LTV/reserves with full lineage, evaluates both rule packs, runs the AUS simulator, and stops at the **decision gate** — no loan ever decides itself.
 3. On the **4 Cs** tab, click any underlined number (e.g. back-DTI) → the lineage popover walks the derivation down to the source document extraction, with confidence, prompt version, and model id.
 4. On the **Decision** tab: the suggested action is *only a suggestion*. Declines force you to pick 1–4 reason codes **from the rules that actually failed** (ECOA/Reg B), plus a second reviewer. Overriding the suggestion demands a written justification — recorded forever.
 5. On the **Audit** tab: the hash-chain badge, the sealed snapshot hash, and **Replay decision** — which re-runs the deterministic core from the sealed inputs and proves the outcome reproduces byte-for-byte.
