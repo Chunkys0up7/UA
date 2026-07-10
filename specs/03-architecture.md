@@ -55,7 +55,7 @@ Two processes in dev: `uvicorn` (port **8000**) and `next dev` (port **3000**). 
 | Python | CPython | `>=3.12,<3.13` via `uv` | copilotkit PyPI had 3.13 wheel issues; 3.12 is the verified lane |
 | API | fastapi | `>=0.115,<1` | |
 | Server | uvicorn[standard] | `>=0.32,<1` | |
-| Agent | langgraph | `>=0.4,<1` | interrupts + checkpointing |
+| Agent | langgraph | `>=1.0.2,<2` | interrupts + checkpointing (bootstrap-verified 2026-07: copilotkit≥0.1.88 → ag-ui-langgraph≥0.0.38 → langchain≥1.2 requires langgraph 1.x) |
 | Checkpoint | langgraph-checkpoint-sqlite | `>=2,<3` | `AsyncSqliteSaver` |
 | CopilotKit (py) | copilotkit | `>=0.1.88,<0.2` | see §5 for known-defect workaround |
 | AG-UI bridge | ag-ui-langgraph | `>=0.0.7` | direct agent mount |

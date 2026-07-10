@@ -1,0 +1,10 @@
+name: greeting
+description: Plain greeting; expect the mock provider to echo it back.
+provider: mock
+messages:
+  - role: user
+    content: "hello copilot"
+expect:
+  content_contains:
+    - "hello copilot"
+  content_matches: "^\\[mock\\]"

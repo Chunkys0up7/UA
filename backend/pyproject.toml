@@ -1,0 +1,35 @@
+[project]
+name = "copilotkit-kickstarter-backend"
+version = "0.1.0"
+description = "FastAPI backend for the CopilotKit Kickstarter — actions, agents, and LLM provider abstraction."
+readme = "../README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*", "evals*"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests", "evals"]
+addopts = "-ra --strict-markers --strict-config"
+asyncio_mode = "auto"
+markers = [
+  "eval: marks scenario evaluations (deselect with '-m \"not eval\"')",
+  "integration: marks tests that hit the real network (skipped by default)",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "A", "C4", "SIM", "RUF"]
+ignore = ["E501"]  # line length is enforced by formatter
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+ignore_missing_imports = true
+plugins = ["pydantic.mypy"]

@@ -1,0 +1,12 @@
+name: weather_tool_call
+description: User asks for weather; expect a structured tool call to get_weather.
+provider: mock
+messages:
+  - role: user
+    content: '/tool get_weather {"city": "London", "units": "celsius"}'
+expect:
+  tool_calls:
+    - name: get_weather
+      arguments_contains:
+        city: London
+        units: celsius

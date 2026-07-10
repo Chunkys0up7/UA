@@ -1,0 +1,40 @@
+{
+  "name": "copilotkit-kickstarter-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Next.js frontend for the CopilotKit Kickstarter — chat UI, hooks, and actions.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@copilotkit/react-core": "1.57.1",
+    "@copilotkit/react-ui": "1.57.1",
+    "@copilotkit/runtime": "1.57.1",
+    "dotenv": "^16.6.1",
+    "next": "^14.2.18",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.18",
+    "jsdom": "^25.0.1",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

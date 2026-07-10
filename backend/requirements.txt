@@ -1,0 +1,47 @@
+# =============================================================================
+# Python backend dependencies.
+# Versions use compatible ranges so the dependency tree stays solvable
+# across copilotkit's own (changing) constraints. For a fully-locked
+# production deploy, generate a lockfile via `pip freeze > requirements.lock`.
+# =============================================================================
+
+# --- Web framework ----------------------------------------------------------
+fastapi>=0.115,<1
+uvicorn[standard]>=0.32,<1
+python-multipart>=0.0.20,<1
+
+# --- CopilotKit runtime -----------------------------------------------------
+# 0.1.40–0.1.87 pinned Python <3.13. 0.1.88+ supports 3.13 again.
+copilotkit>=0.1.88,<0.2
+
+# --- Config / typing --------------------------------------------------------
+# copilotkit 0.1.88 needs pydantic-core>=2.35, which ships with pydantic 2.11+
+pydantic>=2.11,<3
+pydantic-settings>=2.7,<3
+python-dotenv>=1,<2
+
+# --- LLM SDKs (optional — only the one matching LLM_PROVIDER is used) -------
+openai>=1.59,<2
+anthropic>=0.42,<1
+
+# --- Logging ----------------------------------------------------------------
+structlog>=25,<26
+
+# --- Testing & evals --------------------------------------------------------
+pytest>=8.3,<9
+pytest-asyncio>=0.25,<1
+pytest-cov>=6,<7
+httpx>=0.28,<1
+pyyaml>=6,<7
+
+# --- Dev tooling ------------------------------------------------------------
+ruff>=0.9,<1
+mypy>=1.14,<2
+
+# --- LangGraph agent (UA underwriter) ---------------------------------------
+langgraph>=1.0.2,<2
+langgraph-checkpoint-sqlite>=3,<4
+ag-ui-langgraph>=0.0.7
+# aiosqlite 0.22 removed the Thread base class; langgraph-checkpoint-sqlite
+# 2.0.x still calls Connection.is_alive() (bootstrap-verified 2026-07).
+aiosqlite>=0.20,<0.22
