@@ -1,0 +1,288 @@
+{
+  "assets": {
+    "accounts": [
+      {
+        "account_id": "a1",
+        "balance": "194278.51",
+        "kind": "checking",
+        "statements_doc_ids": [
+          "d5a10",
+          "d5a11"
+        ]
+      },
+      {
+        "account_id": "a2",
+        "balance": "129519.01",
+        "kind": "savings",
+        "statements_doc_ids": [
+          "d5a20",
+          "d5a21"
+        ]
+      }
+    ],
+    "down_payment_source": "checking a1",
+    "gift_funds": [],
+    "retirement_accounts": []
+  },
+  "borrowers": [
+    {
+      "borrower_id": "b1",
+      "dob": "1988-04-02",
+      "employment": [
+        {
+          "distance_to_property_miles_sidecar": 12,
+          "employer": "Cardinal Health Partners",
+          "monthly_base_income_stated": "34056.98",
+          "position": "Operations Manager",
+          "start_date": "2019-03-01"
+        }
+      ],
+      "full_name": "Quinn Hale",
+      "is_primary": true,
+      "self_employed": false,
+      "ssn": "900-95-7654",
+      "stated_other_income": [],
+      "voe_sidecar": {
+        "result": "verified"
+      }
+    }
+  ],
+  "credit": {
+    "derogatories": [],
+    "key_factors": [
+      "Proportion of balances to credit limits",
+      "Length of revolving credit history"
+    ],
+    "open_disputes": 0,
+    "permissible_purpose": "credit_transaction",
+    "report_date": "2026-06-18",
+    "score_range": {
+      "high": 850,
+      "low": 300
+    },
+    "scores": [
+      {
+        "borrower_id": "b1",
+        "equifax": 780,
+        "experian": 787,
+        "transunion": 774
+      }
+    ],
+    "tradelines": [
+      {
+        "balance": "46487.70",
+        "derog": null,
+        "dispute": false,
+        "kind": "auto_loan",
+        "late_30_count_12mo": 0,
+        "monthly_payment": "1549.59",
+        "payments_remaining": 30
+      },
+      {
+        "balance": "57556.40",
+        "derog": null,
+        "dispute": false,
+        "kind": "credit_card",
+        "late_30_count_12mo": 0,
+        "monthly_payment": "2877.82"
+      }
+    ]
+  },
+  "documents": [
+    {
+      "borrower_id": "b1",
+      "doc_id": "d1",
+      "doc_type": "paystub",
+      "ground_truth": {
+        "employer": "Cardinal Health Partners",
+        "gross_pay_period": "17028.49",
+        "pay_date": "2026-06-25",
+        "pay_frequency": "semi_monthly",
+        "ytd_gross": "204341.88"
+      },
+      "period_label": "2026-06",
+      "text_rendering": "CARDINAL HEALTH PARTNERS — EARNINGS STATEMENT\nEmployee: Quinn Hale    Pay Date: 2026-06-25\nPay Frequency: Semi-Monthly\n----------------------------------------\n  Gross Pay (this period):   $17,028.49\n  YTD Gross:                 $204,341.88\n----------------------------------------\nDirect deposit to account on file.\n"
+    },
+    {
+      "borrower_id": "b1",
+      "doc_id": "d20",
+      "doc_type": "w2",
+      "ground_truth": {
+        "employer": "Cardinal Health Partners",
+        "tax_year": 2025,
+        "wages_box1": "408683.76"
+      },
+      "period_label": "2025",
+      "text_rendering": "FORM W-2 — WAGE AND TAX STATEMENT — 2025\nEmployer: Cardinal Health Partners\nEmployee: Quinn Hale\nBox 1 Wages, tips, other compensation: $408,683.76\n"
+    },
+    {
+      "borrower_id": "b1",
+      "doc_id": "d21",
+      "doc_type": "w2",
+      "ground_truth": {
+        "employer": "Cardinal Health Partners",
+        "tax_year": 2024,
+        "wages_box1": "408683.76"
+      },
+      "period_label": "2024",
+      "text_rendering": "FORM W-2 — WAGE AND TAX STATEMENT — 2024\nEmployer: Cardinal Health Partners\nEmployee: Quinn Hale\nBox 1 Wages, tips, other compensation: $408,683.76\n"
+    },
+    {
+      "doc_id": "d5a10",
+      "doc_type": "bank_statement",
+      "ground_truth": {
+        "deposits": [
+          {
+            "amount": "17028.49",
+            "date": "2026-05-05",
+            "description": "PAYROLL CARDINAL HEALTH "
+          },
+          {
+            "amount": "17028.49",
+            "date": "2026-05-20",
+            "description": "PAYROLL CARDINAL HEALTH "
+          }
+        ],
+        "ending_balance": "194278.51",
+        "period_end": "2026-05-31",
+        "period_start": "2026-05-01"
+      },
+      "period_label": "2026-05",
+      "text_rendering": "LAKESIDE FEDERAL CU — ACCOUNT STATEMENT (...7711)\nStatement Period: 2026-05-01 through 2026-05-31\nDEPOSITS AND CREDITS\n  2026-05-05  DEPOSIT PAYROLL CARDINAL HEALTH      $17,028.49\n  2026-05-20  DEPOSIT PAYROLL CARDINAL HEALTH      $17,028.49\nENDING BALANCE: $194,278.51\n"
+    },
+    {
+      "doc_id": "d5a20",
+      "doc_type": "bank_statement",
+      "ground_truth": {
+        "deposits": [],
+        "ending_balance": "129519.01",
+        "period_end": "2026-05-31",
+        "period_start": "2026-05-01"
+      },
+      "period_label": "2026-05",
+      "text_rendering": "LAKESIDE FEDERAL CU — ACCOUNT STATEMENT (...7721)\nStatement Period: 2026-05-01 through 2026-05-31\nDEPOSITS AND CREDITS\n\nENDING BALANCE: $129,519.01\n"
+    },
+    {
+      "doc_id": "d5a11",
+      "doc_type": "bank_statement",
+      "ground_truth": {
+        "deposits": [
+          {
+            "amount": "17028.49",
+            "date": "2026-06-05",
+            "description": "PAYROLL CARDINAL HEALTH "
+          },
+          {
+            "amount": "17028.49",
+            "date": "2026-06-20",
+            "description": "PAYROLL CARDINAL HEALTH "
+          }
+        ],
+        "ending_balance": "194278.51",
+        "period_end": "2026-06-30",
+        "period_start": "2026-06-01"
+      },
+      "period_label": "2026-06",
+      "text_rendering": "LAKESIDE FEDERAL CU — ACCOUNT STATEMENT (...7711)\nStatement Period: 2026-06-01 through 2026-06-30\nDEPOSITS AND CREDITS\n  2026-06-05  DEPOSIT PAYROLL CARDINAL HEALTH      $17,028.49\n  2026-06-20  DEPOSIT PAYROLL CARDINAL HEALTH      $17,028.49\nENDING BALANCE: $194,278.51\n"
+    },
+    {
+      "doc_id": "d5a21",
+      "doc_type": "bank_statement",
+      "ground_truth": {
+        "deposits": [],
+        "ending_balance": "129519.01",
+        "period_end": "2026-06-30",
+        "period_start": "2026-06-01"
+      },
+      "period_label": "2026-06",
+      "text_rendering": "LAKESIDE FEDERAL CU — ACCOUNT STATEMENT (...7721)\nStatement Period: 2026-06-01 through 2026-06-30\nDEPOSITS AND CREDITS\n\nENDING BALANCE: $129,519.01\n"
+    },
+    {
+      "doc_id": "d6",
+      "doc_type": "appraisal",
+      "ground_truth": {
+        "appraised_value": "1105000.00",
+        "condition_rating": "C3",
+        "effective_date": "2026-06-20",
+        "hazard_policy_type_hint": "Owner-occupied; standard hazard policy noted.",
+        "property_type": "sfr_detached"
+      },
+      "text_rendering": "UNIFORM RESIDENTIAL APPRAISAL REPORT\nSubject Property: 3727 Synthetic Way, Columbus, OH 43004\nProperty Type: sfr_detached\nOpinion of Market Value: $1,105,000.00\nEffective Date of Appraisal: 2026-06-20\nCondition Rating: C3\nRemarks: Owner-occupied; standard hazard policy noted.\n"
+    },
+    {
+      "borrower_id": "b1",
+      "doc_id": "d7",
+      "doc_type": "urla_1003",
+      "ground_truth": {
+        "declarations": {
+          "bankruptcy_7yr": false,
+          "delinquent_federal_debt": false,
+          "foreclosure_7yr": false,
+          "occupancy_intent_primary": true,
+          "outstanding_judgments": false,
+          "party_to_lawsuit": false,
+          "undisclosed_borrowed_funds": false
+        },
+        "employer_names": [
+          "Cardinal Health Partners"
+        ],
+        "stated_income_monthly": "34056.98",
+        "stated_liabilities_monthly": "4427.41"
+      },
+      "text_rendering": "UNIFORM RESIDENTIAL LOAN APPLICATION (FORM 1003)\nBorrower: Quinn Hale\nEmployers: Cardinal Health Partners\nTotal Monthly Income: $34,056.98\nTotal Monthly Liabilities: $4,427.41\nDeclarations: [X] No outstanding judgments  [X] No bankruptcy (7yr)\n[X] No foreclosure (7yr)  [X] Will occupy as primary residence\n[X] No undisclosed borrowed funds\n"
+    },
+    {
+      "doc_id": "d8",
+      "doc_type": "tri_merge_credit",
+      "text_rendering": "TRI-MERGE CREDIT REPORT — 2026-06-18\nRepresentative score data delivered in structured feed.\nReference score: 780\n"
+    }
+  ],
+  "hmda_demographics": {
+    "b1": {
+      "age_band": "35-44",
+      "ethnicity": "hispanic",
+      "race": "white",
+      "sex": "male"
+    }
+  },
+  "liabilities_stated_monthly_total": "4427.41",
+  "loan": {
+    "amount": "850000.00",
+    "apr": "6.400",
+    "county_high_cost": false,
+    "lender_controlled_fees": "8500.00",
+    "loan_type": "conventional_conforming",
+    "mlo_nmls_id": "1660585",
+    "note_rate": "6.125",
+    "occupancy": "primary",
+    "purpose": "purchase",
+    "term_months": 360,
+    "total_points_and_fees": "17850.00"
+  },
+  "package_version": "1.0",
+  "processor_computed": {
+    "back_dti": "32.2",
+    "front_dti": "19.2",
+    "qualifying_income_monthly": "34056.98"
+  },
+  "property": {
+    "address": {
+      "city": "Columbus",
+      "county": "Franklin",
+      "state": "OH",
+      "street": "3727 Synthetic Way",
+      "zip": "43004"
+    },
+    "annual_hazard_insurance": "2475.00",
+    "annual_taxes": "13200.00",
+    "appraisal_effective_date": "2026-06-20",
+    "appraised_value": "1105000.00",
+    "flood_zone_sidecar": "X",
+    "hazard_policy_type": "owner_occupied",
+    "monthly_hoa": "0.00",
+    "property_type": "sfr_detached",
+    "purchase_price": "1100000.00",
+    "subordinate_liens": [],
+    "units": 1
+  }
+}

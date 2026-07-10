@@ -59,3 +59,7 @@ pnpm-debug.log*
 # --- Eval artifacts ---
 evals/runs/
 evals/.cache/
+
+# synthetic outputs & local DBs (specs/16 §2)
+data/generated/
+data/db/

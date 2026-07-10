@@ -1,0 +1,293 @@
+{
+  "assets": {
+    "accounts": [
+      {
+        "account_id": "a1",
+        "balance": "151677.17",
+        "kind": "checking",
+        "statements_doc_ids": [
+          "d5a10",
+          "d5a11"
+        ]
+      },
+      {
+        "account_id": "a2",
+        "balance": "101118.11",
+        "kind": "savings",
+        "statements_doc_ids": [
+          "d5a20",
+          "d5a21"
+        ]
+      }
+    ],
+    "down_payment_source": "checking a1",
+    "gift_funds": [],
+    "retirement_accounts": []
+  },
+  "borrowers": [
+    {
+      "borrower_id": "b1",
+      "dob": "1988-04-02",
+      "employment": [
+        {
+          "distance_to_property_miles_sidecar": 12,
+          "employer": "Evergreen Manufacturing Co",
+          "monthly_base_income_stated": "24187.08",
+          "position": "Operations Manager",
+          "start_date": "2019-03-01"
+        }
+      ],
+      "full_name": "Casey Okafor",
+      "is_primary": true,
+      "self_employed": false,
+      "ssn": "900-65-9432",
+      "stated_other_income": [],
+      "voe_sidecar": {
+        "result": "unavailable"
+      }
+    }
+  ],
+  "credit": {
+    "derogatories": [],
+    "key_factors": [
+      "Proportion of balances to credit limits",
+      "Length of revolving credit history"
+    ],
+    "open_disputes": 0,
+    "permissible_purpose": "credit_transaction",
+    "report_date": "2026-06-18",
+    "score_range": {
+      "high": 850,
+      "low": 300
+    },
+    "scores": [
+      {
+        "borrower_id": "b1",
+        "equifax": 780,
+        "experian": 787,
+        "transunion": 774
+      }
+    ],
+    "tradelines": [
+      {
+        "balance": "33015.30",
+        "derog": null,
+        "dispute": false,
+        "kind": "auto_loan",
+        "late_30_count_12mo": 0,
+        "monthly_payment": "1100.51",
+        "payments_remaining": 30
+      },
+      {
+        "balance": "40876.20",
+        "derog": null,
+        "dispute": false,
+        "kind": "credit_card",
+        "late_30_count_12mo": 0,
+        "monthly_payment": "2043.81"
+      }
+    ]
+  },
+  "documents": [
+    {
+      "borrower_id": "b1",
+      "doc_id": "d1",
+      "doc_type": "paystub",
+      "ground_truth": {
+        "employer": "Evergreen Manufacturing Co",
+        "gross_pay_period": "12093.54",
+        "pay_date": "2026-06-25",
+        "pay_frequency": "semi_monthly",
+        "ytd_gross": "145122.48"
+      },
+      "period_label": "2026-06",
+      "text_rendering": "EVERGREEN MANUFACTURING CO — EARNINGS STATEMENT\nEmployee: Casey Okafor    Pay Date: 2026-06-25\nPay Frequency: Semi-Monthly\n----------------------------------------\n  Gross Pay (this period):   $12,093.54\n  YTD Gross:                 $145,122.48\n----------------------------------------\nDirect deposit to account on file.\n"
+    },
+    {
+      "borrower_id": "b1",
+      "doc_id": "d20",
+      "doc_type": "w2",
+      "ground_truth": {
+        "employer": "Evergreen Manufacturing Co",
+        "tax_year": 2025,
+        "wages_box1": "290244.96"
+      },
+      "period_label": "2025",
+      "text_rendering": "FORM W-2 — WAGE AND TAX STATEMENT — 2025\nEmployer: Evergreen Manufacturing Co\nEmployee: Casey Okafor\nBox 1 Wages, tips, other compensation: $290,244.96\n"
+    },
+    {
+      "borrower_id": "b1",
+      "doc_id": "d21",
+      "doc_type": "w2",
+      "ground_truth": {
+        "employer": "Evergreen Manufacturing Co",
+        "tax_year": 2024,
+        "wages_box1": "290244.96"
+      },
+      "period_label": "2024",
+      "text_rendering": "FORM W-2 — WAGE AND TAX STATEMENT — 2024\nEmployer: Evergreen Manufacturing Co\nEmployee: Casey Okafor\nBox 1 Wages, tips, other compensation: $290,244.96\n"
+    },
+    {
+      "doc_id": "d5a10",
+      "doc_type": "bank_statement",
+      "ground_truth": {
+        "deposits": [
+          {
+            "amount": "12093.54",
+            "date": "2026-05-05",
+            "description": "PAYROLL EVERGREEN MANUFA"
+          },
+          {
+            "amount": "12093.54",
+            "date": "2026-05-20",
+            "description": "PAYROLL EVERGREEN MANUFA"
+          }
+        ],
+        "ending_balance": "151677.17",
+        "period_end": "2026-05-31",
+        "period_start": "2026-05-01"
+      },
+      "period_label": "2026-05",
+      "text_rendering": "LAKESIDE FEDERAL CU — ACCOUNT STATEMENT (...7711)\nStatement Period: 2026-05-01 through 2026-05-31\nDEPOSITS AND CREDITS\n  2026-05-05  DEPOSIT PAYROLL EVERGREEN MANUFA     $12,093.54\n  2026-05-20  DEPOSIT PAYROLL EVERGREEN MANUFA     $12,093.54\nENDING BALANCE: $151,677.17\n"
+    },
+    {
+      "doc_id": "d5a20",
+      "doc_type": "bank_statement",
+      "ground_truth": {
+        "deposits": [],
+        "ending_balance": "101118.11",
+        "period_end": "2026-05-31",
+        "period_start": "2026-05-01"
+      },
+      "period_label": "2026-05",
+      "text_rendering": "LAKESIDE FEDERAL CU — ACCOUNT STATEMENT (...7721)\nStatement Period: 2026-05-01 through 2026-05-31\nDEPOSITS AND CREDITS\n\nENDING BALANCE: $101,118.11\n"
+    },
+    {
+      "doc_id": "d5a11",
+      "doc_type": "bank_statement",
+      "ground_truth": {
+        "deposits": [
+          {
+            "amount": "12093.54",
+            "date": "2026-06-05",
+            "description": "PAYROLL EVERGREEN MANUFA"
+          },
+          {
+            "amount": "12093.54",
+            "date": "2026-06-20",
+            "description": "PAYROLL EVERGREEN MANUFA"
+          },
+          {
+            "amount": "6288.64",
+            "date": "2026-05-31",
+            "description": "TRANSFER IN"
+          }
+        ],
+        "ending_balance": "151677.17",
+        "period_end": "2026-06-30",
+        "period_start": "2026-06-01"
+      },
+      "period_label": "2026-06",
+      "text_rendering": "LAKESIDE FEDERAL CU — ACCOUNT STATEMENT (...7711)\nStatement Period: 2026-06-01 through 2026-06-30\nDEPOSITS AND CREDITS\n  2026-06-05  DEPOSIT PAYROLL EVERGREEN MANUFA     $12,093.54\n  2026-06-20  DEPOSIT PAYROLL EVERGREEN MANUFA     $12,093.54\n  2026-05-31  DEPOSIT TRANSFER IN                  $6,288.64\nENDING BALANCE: $151,677.17\n"
+    },
+    {
+      "doc_id": "d5a21",
+      "doc_type": "bank_statement",
+      "ground_truth": {
+        "deposits": [],
+        "ending_balance": "101118.11",
+        "period_end": "2026-06-30",
+        "period_start": "2026-06-01"
+      },
+      "period_label": "2026-06",
+      "text_rendering": "LAKESIDE FEDERAL CU — ACCOUNT STATEMENT (...7721)\nStatement Period: 2026-06-01 through 2026-06-30\nDEPOSITS AND CREDITS\n\nENDING BALANCE: $101,118.11\n"
+    },
+    {
+      "doc_id": "d6",
+      "doc_type": "appraisal",
+      "ground_truth": {
+        "appraised_value": "805000.00",
+        "condition_rating": "C3",
+        "effective_date": "2026-06-20",
+        "hazard_policy_type_hint": "Owner-occupied; standard hazard policy noted.",
+        "property_type": "sfr_detached"
+      },
+      "text_rendering": "UNIFORM RESIDENTIAL APPRAISAL REPORT\nSubject Property: 4243 Synthetic Way, Columbus, OH 43004\nProperty Type: sfr_detached\nOpinion of Market Value: $805,000.00\nEffective Date of Appraisal: 2026-06-20\nCondition Rating: C3\nRemarks: Owner-occupied; standard hazard policy noted.\n"
+    },
+    {
+      "borrower_id": "b1",
+      "doc_id": "d7",
+      "doc_type": "urla_1003",
+      "ground_truth": {
+        "declarations": {
+          "bankruptcy_7yr": false,
+          "delinquent_federal_debt": false,
+          "foreclosure_7yr": false,
+          "occupancy_intent_primary": true,
+          "outstanding_judgments": false,
+          "party_to_lawsuit": false,
+          "undisclosed_borrowed_funds": false
+        },
+        "employer_names": [
+          "Evergreen Manufacturing Co"
+        ],
+        "stated_income_monthly": "24187.08",
+        "stated_liabilities_monthly": "3144.32"
+      },
+      "text_rendering": "UNIFORM RESIDENTIAL LOAN APPLICATION (FORM 1003)\nBorrower: Casey Okafor\nEmployers: Evergreen Manufacturing Co\nTotal Monthly Income: $24,187.08\nTotal Monthly Liabilities: $3,144.32\nDeclarations: [X] No outstanding judgments  [X] No bankruptcy (7yr)\n[X] No foreclosure (7yr)  [X] Will occupy as primary residence\n[X] No undisclosed borrowed funds\n"
+    },
+    {
+      "doc_id": "d8",
+      "doc_type": "tri_merge_credit",
+      "text_rendering": "TRI-MERGE CREDIT REPORT — 2026-06-18\nRepresentative score data delivered in structured feed.\nReference score: 780\n"
+    }
+  ],
+  "hmda_demographics": {
+    "b1": {
+      "age_band": "45-54",
+      "ethnicity": "hispanic",
+      "race": "two_or_more",
+      "sex": "male"
+    }
+  },
+  "liabilities_stated_monthly_total": "3144.32",
+  "loan": {
+    "amount": "600000.00",
+    "apr": "6.400",
+    "county_high_cost": false,
+    "lender_controlled_fees": "6000.00",
+    "loan_type": "conventional_conforming",
+    "mlo_nmls_id": "1012259",
+    "note_rate": "6.125",
+    "occupancy": "primary",
+    "purpose": "purchase",
+    "term_months": 360,
+    "total_points_and_fees": "12600.00"
+  },
+  "package_version": "1.0",
+  "processor_computed": {
+    "back_dti": "32.2",
+    "front_dti": "19.2",
+    "qualifying_income_monthly": "24187.08"
+  },
+  "property": {
+    "address": {
+      "city": "Columbus",
+      "county": "Franklin",
+      "state": "OH",
+      "street": "4243 Synthetic Way",
+      "zip": "43004"
+    },
+    "annual_hazard_insurance": "1800.00",
+    "annual_taxes": "9600.00",
+    "appraisal_effective_date": "2026-06-20",
+    "appraised_value": "805000.00",
+    "flood_zone_sidecar": "X",
+    "hazard_policy_type": "owner_occupied",
+    "monthly_hoa": "0.00",
+    "property_type": "sfr_detached",
+    "purchase_price": "800000.00",
+    "subordinate_liens": [],
+    "units": 1
+  }
+}

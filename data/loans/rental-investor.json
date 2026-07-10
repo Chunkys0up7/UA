@@ -1,0 +1,305 @@
+{
+  "assets": {
+    "accounts": [
+      {
+        "account_id": "a1",
+        "balance": "153515.61",
+        "kind": "checking",
+        "statements_doc_ids": [
+          "d5a10",
+          "d5a11"
+        ]
+      },
+      {
+        "account_id": "a2",
+        "balance": "102343.74",
+        "kind": "savings",
+        "statements_doc_ids": [
+          "d5a20",
+          "d5a21"
+        ]
+      }
+    ],
+    "down_payment_source": "checking a1",
+    "gift_funds": [],
+    "retirement_accounts": []
+  },
+  "borrowers": [
+    {
+      "borrower_id": "b1",
+      "dob": "1988-04-02",
+      "employment": [
+        {
+          "distance_to_property_miles_sidecar": 12,
+          "employer": "Acme Logistics LLC",
+          "monthly_base_income_stated": "20341.55",
+          "position": "Operations Manager",
+          "start_date": "2019-03-01"
+        }
+      ],
+      "full_name": "Casey Delacroix",
+      "is_primary": true,
+      "self_employed": false,
+      "ssn": "900-91-3419",
+      "stated_other_income": [
+        {
+          "history_months": 24,
+          "monthly_amount": "3589.69",
+          "type": "rental"
+        }
+      ],
+      "voe_sidecar": {
+        "result": "verified"
+      }
+    }
+  ],
+  "credit": {
+    "derogatories": [],
+    "key_factors": [
+      "Proportion of balances to credit limits",
+      "Length of revolving credit history"
+    ],
+    "open_disputes": 0,
+    "permissible_purpose": "credit_transaction",
+    "report_date": "2026-06-18",
+    "score_range": {
+      "high": 850,
+      "low": 300
+    },
+    "scores": [
+      {
+        "borrower_id": "b1",
+        "equifax": 760,
+        "experian": 767,
+        "transunion": 754
+      }
+    ],
+    "tradelines": [
+      {
+        "balance": "32666.10",
+        "derog": null,
+        "dispute": false,
+        "kind": "auto_loan",
+        "late_30_count_12mo": 0,
+        "monthly_payment": "1088.87",
+        "payments_remaining": 30
+      },
+      {
+        "balance": "40443.80",
+        "derog": null,
+        "dispute": false,
+        "kind": "credit_card",
+        "late_30_count_12mo": 0,
+        "monthly_payment": "2022.19"
+      }
+    ]
+  },
+  "documents": [
+    {
+      "borrower_id": "b1",
+      "doc_id": "d1",
+      "doc_type": "paystub",
+      "ground_truth": {
+        "employer": "Acme Logistics LLC",
+        "gross_pay_period": "10170.78",
+        "pay_date": "2026-06-25",
+        "pay_frequency": "semi_monthly",
+        "ytd_gross": "122049.36"
+      },
+      "period_label": "2026-06",
+      "text_rendering": "ACME LOGISTICS LLC — EARNINGS STATEMENT\nEmployee: Casey Delacroix    Pay Date: 2026-06-25\nPay Frequency: Semi-Monthly\n----------------------------------------\n  Gross Pay (this period):   $10,170.78\n  YTD Gross:                 $122,049.36\n----------------------------------------\nDirect deposit to account on file.\n"
+    },
+    {
+      "borrower_id": "b1",
+      "doc_id": "d20",
+      "doc_type": "w2",
+      "ground_truth": {
+        "employer": "Acme Logistics LLC",
+        "tax_year": 2025,
+        "wages_box1": "244098.60"
+      },
+      "period_label": "2025",
+      "text_rendering": "FORM W-2 — WAGE AND TAX STATEMENT — 2025\nEmployer: Acme Logistics LLC\nEmployee: Casey Delacroix\nBox 1 Wages, tips, other compensation: $244,098.60\n"
+    },
+    {
+      "borrower_id": "b1",
+      "doc_id": "d21",
+      "doc_type": "w2",
+      "ground_truth": {
+        "employer": "Acme Logistics LLC",
+        "tax_year": 2024,
+        "wages_box1": "244098.60"
+      },
+      "period_label": "2024",
+      "text_rendering": "FORM W-2 — WAGE AND TAX STATEMENT — 2024\nEmployer: Acme Logistics LLC\nEmployee: Casey Delacroix\nBox 1 Wages, tips, other compensation: $244,098.60\n"
+    },
+    {
+      "doc_id": "d5a10",
+      "doc_type": "bank_statement",
+      "ground_truth": {
+        "deposits": [
+          {
+            "amount": "10170.78",
+            "date": "2026-05-05",
+            "description": "PAYROLL ACME LOGISTICS L"
+          },
+          {
+            "amount": "10170.78",
+            "date": "2026-05-20",
+            "description": "PAYROLL ACME LOGISTICS L"
+          }
+        ],
+        "ending_balance": "153515.61",
+        "period_end": "2026-05-31",
+        "period_start": "2026-05-01"
+      },
+      "period_label": "2026-05",
+      "text_rendering": "FIRST MERIDIAN BANK — ACCOUNT STATEMENT (...7711)\nStatement Period: 2026-05-01 through 2026-05-31\nDEPOSITS AND CREDITS\n  2026-05-05  DEPOSIT PAYROLL ACME LOGISTICS L     $10,170.78\n  2026-05-20  DEPOSIT PAYROLL ACME LOGISTICS L     $10,170.78\nENDING BALANCE: $153,515.61\n"
+    },
+    {
+      "doc_id": "d5a20",
+      "doc_type": "bank_statement",
+      "ground_truth": {
+        "deposits": [],
+        "ending_balance": "102343.74",
+        "period_end": "2026-05-31",
+        "period_start": "2026-05-01"
+      },
+      "period_label": "2026-05",
+      "text_rendering": "FIRST MERIDIAN BANK — ACCOUNT STATEMENT (...7721)\nStatement Period: 2026-05-01 through 2026-05-31\nDEPOSITS AND CREDITS\n\nENDING BALANCE: $102,343.74\n"
+    },
+    {
+      "doc_id": "d5a11",
+      "doc_type": "bank_statement",
+      "ground_truth": {
+        "deposits": [
+          {
+            "amount": "10170.78",
+            "date": "2026-06-05",
+            "description": "PAYROLL ACME LOGISTICS L"
+          },
+          {
+            "amount": "10170.78",
+            "date": "2026-06-20",
+            "description": "PAYROLL ACME LOGISTICS L"
+          }
+        ],
+        "ending_balance": "153515.61",
+        "period_end": "2026-06-30",
+        "period_start": "2026-06-01"
+      },
+      "period_label": "2026-06",
+      "text_rendering": "FIRST MERIDIAN BANK — ACCOUNT STATEMENT (...7711)\nStatement Period: 2026-06-01 through 2026-06-30\nDEPOSITS AND CREDITS\n  2026-06-05  DEPOSIT PAYROLL ACME LOGISTICS L     $10,170.78\n  2026-06-20  DEPOSIT PAYROLL ACME LOGISTICS L     $10,170.78\nENDING BALANCE: $153,515.61\n"
+    },
+    {
+      "doc_id": "d5a21",
+      "doc_type": "bank_statement",
+      "ground_truth": {
+        "deposits": [],
+        "ending_balance": "102343.74",
+        "period_end": "2026-06-30",
+        "period_start": "2026-06-01"
+      },
+      "period_label": "2026-06",
+      "text_rendering": "FIRST MERIDIAN BANK — ACCOUNT STATEMENT (...7721)\nStatement Period: 2026-06-01 through 2026-06-30\nDEPOSITS AND CREDITS\n\nENDING BALANCE: $102,343.74\n"
+    },
+    {
+      "doc_id": "d6",
+      "doc_type": "appraisal",
+      "ground_truth": {
+        "appraised_value": "805000.00",
+        "condition_rating": "C3",
+        "effective_date": "2026-06-20",
+        "hazard_policy_type_hint": "Owner-occupied; standard hazard policy noted.",
+        "property_type": "two_to_four_unit"
+      },
+      "text_rendering": "UNIFORM RESIDENTIAL APPRAISAL REPORT\nSubject Property: 9505 Synthetic Way, Columbus, OH 43004\nProperty Type: two_to_four_unit\nOpinion of Market Value: $805,000.00\nEffective Date of Appraisal: 2026-06-20\nCondition Rating: C3\nRemarks: Owner-occupied; standard hazard policy noted.\n"
+    },
+    {
+      "borrower_id": "b1",
+      "doc_id": "d7",
+      "doc_type": "urla_1003",
+      "ground_truth": {
+        "declarations": {
+          "bankruptcy_7yr": false,
+          "delinquent_federal_debt": false,
+          "foreclosure_7yr": false,
+          "occupancy_intent_primary": false,
+          "outstanding_judgments": false,
+          "party_to_lawsuit": false,
+          "undisclosed_borrowed_funds": false
+        },
+        "employer_names": [
+          "Acme Logistics LLC"
+        ],
+        "stated_income_monthly": "23931.24",
+        "stated_liabilities_monthly": "3111.06"
+      },
+      "text_rendering": "UNIFORM RESIDENTIAL LOAN APPLICATION (FORM 1003)\nBorrower: Casey Delacroix\nEmployers: Acme Logistics LLC\nTotal Monthly Income: $23,931.24\nTotal Monthly Liabilities: $3,111.06\nDeclarations: [X] No outstanding judgments  [X] No bankruptcy (7yr)\n[X] No foreclosure (7yr)  [ ] Will occupy as primary residence\n[X] No undisclosed borrowed funds\n"
+    },
+    {
+      "doc_id": "d8",
+      "doc_type": "tri_merge_credit",
+      "text_rendering": "TRI-MERGE CREDIT REPORT — 2026-06-18\nRepresentative score data delivered in structured feed.\nReference score: 760\n"
+    },
+    {
+      "doc_id": "d9",
+      "doc_type": "lease",
+      "ground_truth": {
+        "monthly_rent": "4786.25",
+        "start_date": "2025-12-12",
+        "tenant": "Unit B Tenant",
+        "term_months": 12
+      },
+      "text_rendering": "RESIDENTIAL LEASE AGREEMENT\nTenant: Unit B Tenant\nMonthly Rent: $4,786.25\nTerm: 12 months beginning 2025-12-12\n"
+    }
+  ],
+  "hmda_demographics": {
+    "b1": {
+      "age_band": "25-34",
+      "ethnicity": "not_hispanic",
+      "race": "black",
+      "sex": "female"
+    }
+  },
+  "liabilities_stated_monthly_total": "3111.06",
+  "loan": {
+    "amount": "592000.00",
+    "apr": "6.400",
+    "county_high_cost": false,
+    "lender_controlled_fees": "5920.00",
+    "loan_type": "conventional_conforming",
+    "mlo_nmls_id": "1607395",
+    "note_rate": "6.125",
+    "occupancy": "investment",
+    "purpose": "purchase",
+    "term_months": 360,
+    "total_points_and_fees": "12432.00"
+  },
+  "package_version": "1.0",
+  "processor_computed": {
+    "back_dti": "32.2",
+    "front_dti": "19.2",
+    "qualifying_income_monthly": "23931.24"
+  },
+  "property": {
+    "address": {
+      "city": "Columbus",
+      "county": "Franklin",
+      "state": "OH",
+      "street": "9505 Synthetic Way",
+      "zip": "43004"
+    },
+    "annual_hazard_insurance": "1800.00",
+    "annual_taxes": "9600.00",
+    "appraisal_effective_date": "2026-06-20",
+    "appraised_value": "805000.00",
+    "flood_zone_sidecar": "X",
+    "hazard_policy_type": "owner_occupied",
+    "monthly_hoa": "0.00",
+    "property_type": "two_to_four_unit",
+    "purchase_price": "800000.00",
+    "subordinate_liens": [],
+    "units": 2
+  }
+}
