@@ -107,15 +107,24 @@ async def mount_underwriter(app: FastAPI) -> None:
     event loop. Routes added during lifespan startup are registered
     before the server accepts requests, so this is safe.
 
-    Phase 0: 3-node interrupt walking skeleton (specs/16 §3); replaced
-    by the full pipeline graph in Phase 5 without changing this mount.
+    Phase 5: the full underwriting pipeline graph (specs/09) — same mount
+    and resume contract the Phase-0 skeleton proved.
     """
+    import aiosqlite
     from ag_ui_langgraph import LangGraphAgent, add_langgraph_fastapi_endpoint
+    from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
+    from pathlib import Path
 
+    from app.agent.graph import build_underwriter_graph
+
+    checkpoint_db = Path(__file__).resolve().parents[2] / "data" / "db" / "checkpoints.db"
+    checkpoint_db.parent.mkdir(parents=True, exist_ok=True)
+    saver = AsyncSqliteSaver(
+        aiosqlite.connect(str(checkpoint_db), check_same_thread=False))
     underwriter_agent = LangGraphAgent(
         name=_UNDERWRITER_NAME,
-        graph=build_underwriter_skeleton(),
-        description="UA underwriting agent (Phase 0 interrupt skeleton).",
+        graph=build_underwriter_graph(checkpointer=saver),
+        description="UA underwriting agent (full pipeline, specs/09).",
     )
     add_langgraph_fastapi_endpoint(app, underwriter_agent, _UNDERWRITER_PATH)
     log.info("copilotkit.agent.mounted", path=_UNDERWRITER_PATH, agent=_UNDERWRITER_NAME)
