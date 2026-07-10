@@ -28,6 +28,7 @@ export default function LoanPage({ params }: { params: { id: string } }) {
   const [interruptPacket, setInterruptPacket] = useState<any | null>(null);
   const [agentState, setAgentState] = useState<any>({});
   const [decisionInfo, setDecisionInfo] = useState<any | null>(null);
+  const [history, setHistory] = useState<any | null>(null);
   const [adverse, setAdverse] = useState<any | null>(null);
   const packetRef = useRef<any | null>(null);
 
@@ -39,7 +40,11 @@ export default function LoanPage({ params }: { params: { id: string } }) {
       api.decision(applicationId).then(setDecisionInfo).catch(() => null);
       api.adverseAction(applicationId).then(setAdverse).catch(() => null);
     }
-    if (data.status === "ready_for_decision" && data.packet) {
+    api.decisionHistory(applicationId).then(setHistory).catch(() => null);
+    // Seed the gate from REST only when nothing is held: a live interrupt
+    // event (possibly re-presented WITH validation_errors) must never be
+    // clobbered by the stale REST copy.
+    if (data.status === "ready_for_decision" && data.packet && !packetRef.current) {
       setInterruptPacket(data.packet);
       packetRef.current = data.packet;
     }
@@ -80,6 +85,7 @@ export default function LoanPage({ params }: { params: { id: string } }) {
   const submitDecision = (resume: ResumePayload) => {
     setBusy(true);
     setInterruptPacket(null);
+    packetRef.current = null;
     underwriterAgent.threadId = applicationId;
     underwriterAgent
       .runAgent({
@@ -206,11 +212,52 @@ export default function LoanPage({ params }: { params: { id: string } }) {
               <p className="text-lg font-bold" data-testid="final-action">
                 {String(decisionInfo.decision.action).replace(/_/g, " ")}
               </p>
-              <dl className="mt-2 grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
+              {decisionInfo.decision.reasons_detail?.length > 0 && (
+                <div className="mt-2" data-testid="decision-reasons">
+                  <h4 className="text-xs font-bold uppercase text-stone-500">
+                    Principal reasons (ECOA/Reg B)
+                  </h4>
+                  <ul className="ml-4 list-disc text-sm">
+                    {decisionInfo.decision.reasons_detail.map((reason: any) => (
+                      <li key={reason.reason_code}>
+                        <span className="font-mono text-xs text-stone-500">
+                          {reason.reason_code}
+                        </span>{" "}
+                        {reason.ecoa_text}{" "}
+                        <span className="text-xs text-stone-400">
+                          (HMDA {reason.hmda_denial_code})
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {decisionInfo.decision.notes && (
+                <p className="mt-2 rounded bg-stone-50 p-2 text-sm"
+                   data-testid="decision-notes-shown">
+                  <b>Underwriter notes:</b> {decisionInfo.decision.notes}
+                </p>
+              )}
+              {decisionInfo.decision.override && (
+                <div className="mt-2 rounded border border-red-200 bg-red-50 p-2 text-sm"
+                     data-testid="decision-override">
+                  <b>OVERRIDE</b> — suggested{" "}
+                  <i>{decisionInfo.decision.override.suggested_action}</i>, decided{" "}
+                  <i>{decisionInfo.decision.override.actual_action}</i>.
+                  <br />
+                  Justification: {decisionInfo.decision.override.justification}
+                </div>
+              )}
+              <dl className="mt-3 grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
                 <dt className="text-stone-500">Decided by</dt>
                 <dd>{decisionInfo.decision.decided_by}</dd>
                 <dt className="text-stone-500">Second reviewer</dt>
                 <dd>{decisionInfo.decision.second_reviewer ?? "—"}</dd>
+                <dt className="text-stone-500">Suggested vs decided</dt>
+                <dd>
+                  {decisionInfo.decision.suggested_action?.replace(/_/g, " ")} →{" "}
+                  {decisionInfo.decision.action.replace(/_/g, " ")}
+                </dd>
                 <dt className="text-stone-500">HMDA action taken</dt>
                 <dd>{decisionInfo.decision.hmda_action_taken ?? "pending"}</dd>
                 <dt className="text-stone-500">Snapshot</dt>
@@ -225,6 +272,40 @@ export default function LoanPage({ params }: { params: { id: string } }) {
                   {decisionInfo.versions.llm_provider}
                 </dd>
               </dl>
+            </Card>
+          )}
+          {history && history.decisions.length > 0 && (
+            <Card title={`Decision history (${history.decisions.length})`}>
+              <ol className="space-y-2" data-testid="decision-history">
+                {history.decisions.map((entry: any) => (
+                  <li key={entry.seq}
+                      className="rounded border border-stone-200 p-2 text-sm">
+                    <span className="font-bold">
+                      {entry.decision.action.replace(/_/g, " ")}
+                    </span>
+                    <span className="ml-2 text-stone-500">
+                      by {entry.decision.decided_by}
+                      {entry.decision.second_reviewer &&
+                        ` · reviewed by ${entry.decision.second_reviewer}`}
+                      {" · "}
+                      {entry.sealed_at}
+                    </span>
+                    {entry.decision.reason_codes?.length > 0 && (
+                      <span className="ml-2 font-mono text-xs text-stone-500">
+                        [{entry.decision.reason_codes.join(", ")}]
+                      </span>
+                    )}
+                    {entry.decision.notes && (
+                      <div className="text-xs text-stone-600">
+                        “{entry.decision.notes}”
+                      </div>
+                    )}
+                    <div className="font-mono text-[10px] text-stone-400">
+                      snapshot {entry.snapshot_hash.slice(0, 20)}…
+                    </div>
+                  </li>
+                ))}
+              </ol>
             </Card>
           )}
           {adverse && (

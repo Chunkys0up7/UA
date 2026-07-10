@@ -86,6 +86,8 @@ export const api = {
       snapshot_hash: string | null;
     }>(`/loans/${id}/audit/verify`),
   decision: (id: string) => get<any>(`/loans/${id}/decision`),
+  decisionHistory: (id: string) =>
+    get<{ decisions: any[]; human_actions: any[] }>(`/loans/${id}/decisions`),
   adverseAction: (id: string) => get<any>(`/loans/${id}/adverse-action`),
   replay: async (id: string) => {
     const response = await fetch(`${BACKEND}/loans/${id}/replay`, {

@@ -87,6 +87,14 @@
         "decided_by": {"type": "string"},
         "second_reviewer": {"type": ["string", "null"]},
         "reason_codes": {"type": "array", "items": {"type": "string"}},
+        "reasons_detail": {
+          "type": "array",
+          "description": "Human-readable decision-reason record: each selected code with its exact ECOA notice text and HMDA denial code, frozen at seal time",
+          "items": {"type": "object", "required": ["reason_code", "ecoa_text", "hmda_denial_code"],
+                    "additionalProperties": false,
+                    "properties": {"reason_code": {"type": "string"}, "ecoa_text": {"type": "string"}, "hmda_denial_code": {"type": "integer"}}}
+        },
+        "notes": {"type": ["string", "null"], "description": "Underwriter rationale attachable to ANY action (not only overrides)"},
         "override": {"type": ["object", "null"]},
         "counteroffer_terms": {"type": ["object", "null"]},
         "hmda_action_taken": {"type": ["integer", "null"]}

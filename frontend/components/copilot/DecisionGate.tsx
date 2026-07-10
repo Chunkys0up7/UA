@@ -22,6 +22,7 @@ export interface ResumePayload {
   second_reviewer_id?: string | null;
   reason_codes?: string[];
   justification?: string | null;
+  notes?: string | null;
   counteroffer_terms?: { loan_amount: string } | null;
 }
 
@@ -40,6 +41,7 @@ export function DecisionGate({
   const [second, setSecond] = useState("");
   const [codes, setCodes] = useState<string[]>([]);
   const [justification, setJustification] = useState("");
+  const [notes, setNotes] = useState("");
   const hints: any[] = packet.counteroffer_hints ?? [];
   const [counterAmount, setCounterAmount] = useState(
     hints[0]?.max_value ?? "",
@@ -179,6 +181,23 @@ export function DecisionGate({
         </div>
       )}
 
+      <div className="mt-4">
+        <h4 className="text-sm font-bold">
+          Underwriter notes{" "}
+          <span className="font-normal text-stone-500">
+            (optional — recorded permanently with the decision)
+          </span>
+        </h4>
+        <textarea
+          data-testid="decision-notes"
+          className="mt-1 w-full rounded border border-stone-300 p-2 text-sm"
+          rows={2}
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          placeholder="Rationale, compensating-factor commentary, follow-ups…"
+        />
+      </div>
+
       <div className="mt-4 flex flex-wrap items-end gap-3">
         <label className="text-sm">
           <span className="block text-xs font-bold text-stone-500">
@@ -215,6 +234,7 @@ export function DecisionGate({
               second_reviewer_id: second || null,
               reason_codes: action === "decline" ? codes : [],
               justification: justification || null,
+              notes: notes || null,
               counteroffer_terms:
                 action === "counteroffer"
                   ? { loan_amount: counterAmount }

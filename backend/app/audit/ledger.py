@@ -48,11 +48,13 @@ CREATE TRIGGER IF NOT EXISTS audit_no_delete BEFORE DELETE ON audit_events
 BEGIN SELECT RAISE(ABORT, 'audit_events is append-only'); END;
 
 CREATE TABLE IF NOT EXISTS decision_snapshots (
-  application_id TEXT PRIMARY KEY,
+  seq INTEGER PRIMARY KEY AUTOINCREMENT,   -- multiple decisions per loan over
+  application_id TEXT NOT NULL,            -- its life (suspend -> re-run -> decide)
   snapshot_json TEXT NOT NULL,
   sha256 TEXT NOT NULL,
   sealed_at TEXT NOT NULL
 );
+CREATE INDEX IF NOT EXISTS idx_snap_app ON decision_snapshots(application_id, seq);
 CREATE TRIGGER IF NOT EXISTS snap_no_update BEFORE UPDATE ON decision_snapshots
 BEGIN SELECT RAISE(ABORT, 'snapshots are immutable'); END;
 CREATE TRIGGER IF NOT EXISTS snap_no_delete BEFORE DELETE ON decision_snapshots
@@ -166,12 +168,25 @@ class AuditLedger:
             conn.commit()
 
     def get_snapshot(self, application_id: str) -> tuple[str, str] | None:
+        """Latest sealed decision (decision HISTORY via snapshots_for)."""
         with self._connect() as conn:
             row = conn.execute(
                 "SELECT snapshot_json, sha256 FROM decision_snapshots"
-                " WHERE application_id = ?", (application_id,),
+                " WHERE application_id = ? ORDER BY seq DESC LIMIT 1",
+                (application_id,),
             ).fetchone()
         return (row[0], row[1]) if row else None
+
+    def snapshots_for(self, application_id: str) -> list[tuple[int, str, str, str]]:
+        """Full decision history, oldest first: (seq, snapshot_json, sha256,
+        sealed_at). Every decision a loan has ever received (FR-AUD-5)."""
+        with self._connect() as conn:
+            rows = conn.execute(
+                "SELECT seq, snapshot_json, sha256, sealed_at"
+                " FROM decision_snapshots WHERE application_id = ?"
+                " ORDER BY seq", (application_id,),
+            ).fetchall()
+        return [(r[0], r[1], r[2], r[3]) for r in rows]
 
 
 __all__ = ["AuditLedger", "AuditEvent", "chain_hash", "GENESIS", "EVENT_TYPES", "DDL"]

@@ -21,6 +21,19 @@ Resolved at Phase 0 bootstrap (2026-07-10), lockfiles authoritative:
 | aiosqlite | (transitive) | `>=0.20,<0.22` → 0.21.0 | 0.22 removed the Thread base class; checkpoint-sqlite calls `Connection.is_alive()` |
 | @copilotkit/* (js) | `^1.10.0` | pinned `1.57.1` | `^1.10` resolved 1.62.3 whose provider rewrite (thread manager, proxied agents) is unverified; 1.57.x is the skill-verified line. D-P0-1 applies to both. |
 
+## D-P7-1 — Decision reason/history hardening (spec ENHANCEMENT, additive)
+
+- **Spec affected:** `11 §2/§6` (snapshot storage), `12 §3.5` (decision endpoints), `schemas/interrupt-resume` + `schemas/decision-snapshot`, `13 §6`.
+- **Gap found:** decision HISTORY was under-specified — `decision_snapshots` keyed by `application_id` alone meant a suspended-then-re-run loan crashed on its second seal; approvals/suspends carried no recorded rationale; the UI showed neither reason texts nor prior decisions.
+- **Resolution (all additive):**
+  1. `decision_snapshots` gains a `seq` autoincrement key — **every** decision a loan ever receives is sealed and kept (immutability triggers unchanged); `get_snapshot` = latest, `snapshots_for` = full history.
+  2. Resume payload gains optional `notes` — underwriter rationale recordable on ANY action, persisted in the `human_action` event and the sealed decision.
+  3. Sealed decisions gain `reasons_detail` — each selected code with its exact ECOA text and HMDA denial code, frozen at seal time (display never depends on a future pack lookup).
+  4. New endpoint `GET /loans/{id}/decisions` — full decision history plus the human_action/override event stream.
+  5. Decision tab shows reasons (code + ECOA text + HMDA), notes, override justification, suggested-vs-decided, and the Decision history card.
+- **Also fixed:** the deep-dive page no longer lets a stale REST packet clobber a re-presented interrupt carrying `validation_errors` (seed-only-when-empty guard).
+- **Impact:** strengthens FR-AUD-5/FR-AAN-1 coverage; no behavior removed. Proven by `tests/test_decision_history.py` (suspend → re-run → approve yields two sealed, individually replayable decisions with notes and override preserved) and a clean browser E2E.
+
 ## D-P0-3 — AsyncSqliteSaver constructed in FastAPI lifespan
 
 - **Spec affected:** `09 §6` (checkpointer), `03 §5` (mount wiring).

@@ -271,6 +271,7 @@ def finalize(services: Services, run: CaseRun,
                            "underwriter_id": decision.underwriter_id,
                            "second_reviewer_id": decision.second_reviewer_id,
                            "reason_codes": list(decision.reason_codes),
+                           "notes": decision.notes,
                            "condition_edits_count": len(decision.condition_edits)})
 
     override_record = None
@@ -357,6 +358,13 @@ def finalize(services: Services, run: CaseRun,
             "decided_by": decision.underwriter_id,
             "second_reviewer": decision.second_reviewer_id,
             "reason_codes": list(decision.reason_codes),
+            "reasons_detail": [   # decision-reason record, human-readable forever
+                {"reason_code": code,
+                 "ecoa_text": services.reason_bindings[code]["ecoa_text"],
+                 "hmda_denial_code":
+                     services.reason_bindings[code]["hmda_denial_code"]}
+                for code in decision.reason_codes],
+            "notes": decision.notes,
             "override": override_record,
             "counteroffer_terms": decision.counteroffer_terms,
             "hmda_action_taken": action_code,

@@ -256,6 +256,7 @@ async def audit_export(application_id: str) -> Response:
 
 @router.get("/loans/{application_id}/decision")
 async def decision(application_id: str) -> dict:
+    """Latest decision with full reason detail and provenance (NFR-7)."""
     ledger = agent_graph.get_services().ledger
     snapshot = ledger.get_snapshot(application_id)
     if snapshot is None:
@@ -263,6 +264,27 @@ async def decision(application_id: str) -> dict:
     parsed = json.loads(snapshot[0])
     return {"decision": parsed["decision"], "versions": parsed["versions"],
             "snapshot_hash": snapshot[1], "sealed_at": parsed["sealed_at"]}
+
+
+@router.get("/loans/{application_id}/decisions")
+async def decision_history(application_id: str) -> dict:
+    """FULL decision history — every sealed decision this loan has ever
+    received (e.g. suspend -> re-run -> approve), oldest first, each with
+    its reasons, notes, override record, versions, and snapshot hash."""
+    ledger = agent_graph.get_services().ledger
+    history = []
+    for seq, snapshot_json, sha256, sealed_at in ledger.snapshots_for(application_id):
+        parsed = json.loads(snapshot_json)
+        history.append({
+            "seq": seq, "sealed_at": sealed_at, "snapshot_hash": sha256,
+            "decision": parsed["decision"], "versions": parsed["versions"],
+        })
+    human_actions = [
+        {"created_at": e.created_at, "actor": e.actor,
+         "payload": json.loads(e.payload_json)}
+        for e in ledger.events(application_id)
+        if e.event_type in ("human_action", "override")]
+    return {"decisions": history, "human_actions": human_actions}
 
 
 @router.get("/loans/{application_id}/adverse-action")

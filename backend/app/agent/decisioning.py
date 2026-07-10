@@ -149,6 +149,7 @@ class GateDecision:
     second_reviewer_id: str | None
     reason_codes: tuple[str, ...]
     justification: str | None
+    notes: str | None            # underwriter rationale on ANY action
     condition_edits: tuple[dict, ...]
     counteroffer_terms: dict | None
     is_override: bool
@@ -196,6 +197,7 @@ def validate_resume(
     return GateDecision(
         action=action, underwriter_id=underwriter, second_reviewer_id=second,
         reason_codes=reason_codes, justification=justification,
+        notes=(resume.get("notes") or "").strip() or None,
         condition_edits=tuple(resume.get("condition_edits") or ()),
         counteroffer_terms=counteroffer_terms, is_override=is_override,
     ), []
