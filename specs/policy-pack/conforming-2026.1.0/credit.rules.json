@@ -1,0 +1,46 @@
+{
+  "ruleset": "credit",
+  "pack": "conforming-2026.1.0",
+  "rules": [
+    {
+      "id": "CR-001",
+      "description": "Loan-level representative credit score must be at least 620",
+      "inputs": ["credit.representative_score"],
+      "when": {">=": ["credit.representative_score", 620]},
+      "on_fail": {"outcome": "ineligible", "reason_code": "RC-CREDIT-SCORE"},
+      "severity": "eligibility"
+    },
+    {
+      "id": "CR-002",
+      "description": "No open disputes on any credit tradeline (open disputes render the file ineligible for automated eligibility, mirroring AUS behavior)",
+      "inputs": ["credit.open_disputes"],
+      "when": {"==": ["credit.open_disputes", 0]},
+      "on_fail": {"outcome": "ineligible", "reason_code": "RC-CREDIT-DISPUTE"},
+      "severity": "eligibility"
+    },
+    {
+      "id": "CR-003",
+      "description": "Chapter 7 bankruptcy must be discharged at least 48 months before the credit report date (absent = pass)",
+      "inputs": ["credit.bk7_months_since"],
+      "when": {"or": [{"absent": "credit.bk7_months_since"}, {">=": ["credit.bk7_months_since", 48]}]},
+      "on_fail": {"outcome": "ineligible", "reason_code": "RC-CREDIT-HISTORY"},
+      "severity": "eligibility"
+    },
+    {
+      "id": "CR-004",
+      "description": "Foreclosure must be completed at least 84 months before the credit report date (absent = pass)",
+      "inputs": ["credit.fc_months_since"],
+      "when": {"or": [{"absent": "credit.fc_months_since"}, {">=": ["credit.fc_months_since", 84]}]},
+      "on_fail": {"outcome": "ineligible", "reason_code": "RC-CREDIT-HISTORY"},
+      "severity": "eligibility"
+    },
+    {
+      "id": "CR-005",
+      "description": "No mortgage delinquencies of 30+ days within the last 12 months; violations refer the file for manual assessment",
+      "inputs": ["credit.late_mortgage_12mo"],
+      "when": {"==": ["credit.late_mortgage_12mo", 0]},
+      "on_fail": {"outcome": "refer", "reason_code": "RC-CREDIT-HISTORY"},
+      "severity": "eligibility"
+    }
+  ]
+}

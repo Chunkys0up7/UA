@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ua:schemas:decision-snapshot:1",
+  "title": "Sealed decision snapshot (11-audit-repeatability.md §6)",
+  "type": "object",
+  "required": ["snapshot_version", "application_id", "sealed_at", "versions", "inputs", "computed", "rules", "aus", "conditions", "decision"],
+  "additionalProperties": false,
+  "properties": {
+    "snapshot_version": {"const": "1"},
+    "application_id": {"type": "string"},
+    "sealed_at": {"type": "string"},
+    "versions": {
+      "type": "object",
+      "required": ["policy_pack", "policy_pack_manifest_sha256", "prompts", "model_ids", "aus_simulator", "code_git_sha", "llm_provider"],
+      "additionalProperties": false,
+      "properties": {
+        "policy_pack": {"type": "string"},
+        "policy_pack_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "prompts": {"type": "object", "additionalProperties": {"type": "integer"}},
+        "model_ids": {"type": "array", "items": {"type": "string"}},
+        "aus_simulator": {"type": "string"},
+        "code_git_sha": {"type": "string"},
+        "llm_provider": {"enum": ["mock", "anthropic"]}
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "required": ["package_sha256", "extracted_fields", "adapter_results"],
+      "additionalProperties": false,
+      "properties": {
+        "package_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "extracted_fields": {
+          "type": "array",
+          "items": {"type": "object", "required": ["id", "document_id", "field_name", "value", "confidence", "prompt", "model"],
+                    "additionalProperties": false,
+                    "properties": {"id": {"type": "string"}, "document_id": {"type": "string"}, "field_name": {"type": "string"},
+                                   "value": {"type": "string"}, "confidence": {"type": "number"}, "prompt": {"type": "string"}, "model": {"type": "string"}}}
+        },
+        "adapter_results": {"type": "array", "items": {"type": "object", "required": ["adapter", "version", "result"], "properties": {"adapter": {"type": "string"}, "version": {"type": "string"}, "result": {"type": "object"}}, "additionalProperties": false}}
+      }
+    },
+    "computed": {
+      "type": "object",
+      "required": ["income_components", "dti", "ltv", "reserves", "representative_score", "atr", "red_flags", "discrepancies"],
+      "additionalProperties": false,
+      "properties": {
+        "income_components": {"type": "array", "items": {"type": "object"}},
+        "dti": {"type": "object"},
+        "ltv": {"type": "object"},
+        "reserves": {"type": "object"},
+        "representative_score": {"type": "integer"},
+        "atr": {"type": "array", "minItems": 8, "maxItems": 8, "items": {"type": "object"}},
+        "red_flags": {"type": "array", "items": {"type": "object"}},
+        "discrepancies": {"type": "array", "items": {"type": "object"}}
+      }
+    },
+    "rules": {
+      "type": "object",
+      "required": ["evaluations", "overall", "counteroffer_hints"],
+      "additionalProperties": false,
+      "properties": {
+        "evaluations": {"type": "array", "items": {"type": "object", "required": ["rule_id", "outcome"], "properties": {"rule_id": {"type": "string"}, "outcome": {"enum": ["pass", "fail", "refer"]}, "reason_code": {"type": ["string", "null"]}, "inputs": {"type": "array"}}}},
+        "overall": {"enum": ["eligible", "ineligible", "refer"]},
+        "counteroffer_hints": {"type": "array", "items": {"type": "object"}}
+      }
+    },
+    "aus": {
+      "type": "object",
+      "required": ["recommendation", "breakdown", "messages"],
+      "additionalProperties": false,
+      "properties": {
+        "recommendation": {"enum": ["Approve/Eligible", "Approve/Ineligible", "Refer with Caution", "Out of Scope"]},
+        "breakdown": {"type": "object"},
+        "messages": {"type": "array", "items": {"type": "object"}}
+      }
+    },
+    "conditions": {"type": "array", "items": {"type": "object"}},
+    "decision": {
+      "type": "object",
+      "required": ["action", "suggested_action", "decided_by", "reason_codes", "hmda_action_taken"],
+      "additionalProperties": false,
+      "properties": {
+        "action": {"enum": ["approve_with_conditions", "suspend", "decline", "counteroffer"]},
+        "suggested_action": {"enum": ["approve_with_conditions", "suspend", "decline", "counteroffer"]},
+        "decided_by": {"type": "string"},
+        "second_reviewer": {"type": ["string", "null"]},
+        "reason_codes": {"type": "array", "items": {"type": "string"}},
+        "override": {"type": ["object", "null"]},
+        "counteroffer_terms": {"type": ["object", "null"]},
+        "hmda_action_taken": {"type": ["integer", "null"]}
+      }
+    },
+    "adverse_action_notice_sha256": {"type": ["string", "null"]}
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ua:schemas:interrupt-resume:1",
+  "title": "Decision gate interrupt payload and resume payload",
+  "$defs": {
+    "traced": {"type": "object", "required": ["value", "lineage_ref"], "properties": {"value": {"type": "string"}, "lineage_ref": {"type": "string"}}, "additionalProperties": false},
+    "decision_packet": {
+      "type": "object",
+      "required": ["application_id", "suggested_action", "four_cs", "rules", "eligible_reason_codes", "aus", "red_flags", "conditions", "counteroffer_hints", "four_eyes_required", "atr_complete", "validation_errors"],
+      "additionalProperties": false,
+      "properties": {
+        "application_id": {"type": "string"},
+        "suggested_action": {"enum": ["approve_with_conditions", "suspend", "decline", "counteroffer"]},
+        "four_cs": {"type": "object"},
+        "rules": {
+          "type": "object",
+          "required": ["overall", "failed"],
+          "additionalProperties": false,
+          "properties": {
+            "overall": {"enum": ["eligible", "ineligible", "refer"]},
+            "failed": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["rule_id", "reason_code", "description", "inputs"],
+                "additionalProperties": false,
+                "properties": {
+                  "rule_id": {"type": "string"}, "reason_code": {"type": "string"}, "description": {"type": "string"},
+                  "inputs": {"type": "array", "items": {"type": "object", "required": ["path", "value"], "properties": {"path": {"type": "string"}, "value": {"type": "string"}, "lineage_ref": {"type": "string"}}, "additionalProperties": false}}
+                }
+              }
+            }
+          }
+        },
+        "eligible_reason_codes": {"type": "array", "items": {"type": "string"}},
+        "aus": {
+          "type": "object",
+          "required": ["recommendation", "messages_by_category"],
+          "additionalProperties": false,
+          "properties": {
+            "recommendation": {"enum": ["Approve/Eligible", "Approve/Ineligible", "Refer with Caution", "Out of Scope"]},
+            "messages_by_category": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "PTA": {"type": "array", "items": {"type": "object"}},
+                "PTD": {"type": "array", "items": {"type": "object"}},
+                "PTF": {"type": "array", "items": {"type": "object"}}
+              }
+            }
+          }
+        },
+        "red_flags": {"type": "array", "items": {"type": "object"}},
+        "conditions": {"type": "array", "items": {"type": "object"}},
+        "counteroffer_hints": {
+          "type": "array",
+          "items": {"type": "object", "required": ["rule_id", "parameter", "max_value"], "additionalProperties": false,
+                    "properties": {"rule_id": {"type": "string"}, "parameter": {"const": "loan.amount"}, "max_value": {"type": "string"}, "achieved_ratio": {"type": "string"}}}
+        },
+        "four_eyes_required": {"type": "boolean"},
+        "atr_complete": {"type": "boolean"},
+        "validation_errors": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "resume": {
+      "type": "object",
+      "required": ["action", "underwriter_id"],
+      "additionalProperties": false,
+      "properties": {
+        "action": {"enum": ["approve_with_conditions", "suspend", "decline", "counteroffer"]},
+        "underwriter_id": {"type": "string", "minLength": 1},
+        "second_reviewer_id": {"type": ["string", "null"]},
+        "reason_codes": {"type": "array", "maxItems": 4, "items": {"type": "string"}},
+        "justification": {"type": ["string", "null"]},
+        "condition_edits": {
+          "type": "array",
+          "items": {"type": "object", "required": ["id"], "additionalProperties": false,
+                    "properties": {"id": {"type": "string"}, "text": {"type": "string"}, "status": {"enum": ["open", "waived"]}}}
+        },
+        "counteroffer_terms": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "properties": {"loan_amount": {"type": "string", "pattern": "^[0-9]+\\.[0-9]{2}$"}}
+        }
+      },
+      "allOf": [
+        {"if": {"properties": {"action": {"const": "decline"}}},
+         "then": {"properties": {"reason_codes": {"minItems": 1}, "second_reviewer_id": {"type": "string", "minLength": 1}}, "required": ["reason_codes", "second_reviewer_id"]}},
+        {"if": {"properties": {"action": {"const": "counteroffer"}}},
+         "then": {"required": ["counteroffer_terms"], "properties": {"counteroffer_terms": {"type": "object", "required": ["loan_amount"]}}}}
+      ]
+    }
+  },
+  "oneOf": [{"$ref": "#/$defs/decision_packet"}, {"$ref": "#/$defs/resume"}]
+}

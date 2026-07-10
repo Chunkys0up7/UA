@@ -1,0 +1,259 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ua:schemas:loan-package:1",
+  "title": "Loan Package (underwriting submission)",
+  "type": "object",
+  "required": ["package_version", "loan", "property", "borrowers", "credit", "assets", "liabilities_stated_monthly_total", "processor_computed", "documents"],
+  "additionalProperties": false,
+  "$defs": {
+    "money": {"type": "string", "pattern": "^-?[0-9]+\\.[0-9]{2}$"},
+    "rate": {"type": "string", "pattern": "^[0-9]+\\.[0-9]{1,3}$"},
+    "date": {"type": "string", "format": "date"},
+    "ulidish": {"type": "string", "minLength": 1, "maxLength": 40}
+  },
+  "properties": {
+    "package_version": {"const": "1.0"},
+    "loan": {
+      "type": "object",
+      "required": ["amount", "purpose", "occupancy", "loan_type", "note_rate", "term_months", "mlo_nmls_id", "county_high_cost"],
+      "additionalProperties": false,
+      "properties": {
+        "amount": {"$ref": "#/$defs/money"},
+        "purpose": {"enum": ["purchase", "rate_term_refi", "cash_out_refi"]},
+        "occupancy": {"enum": ["primary", "second_home", "investment"]},
+        "loan_type": {"const": "conventional_conforming"},
+        "note_rate": {"$ref": "#/$defs/rate"},
+        "term_months": {"type": "integer", "minimum": 120, "maximum": 480},
+        "mlo_nmls_id": {"type": "string", "pattern": "^[0-9]{4,10}$"},
+        "county_high_cost": {"type": "boolean"}
+      }
+    },
+    "property": {
+      "type": "object",
+      "required": ["address", "property_type", "units", "appraised_value", "appraisal_effective_date", "annual_taxes", "annual_hazard_insurance", "monthly_hoa", "subordinate_liens"],
+      "additionalProperties": false,
+      "properties": {
+        "address": {
+          "type": "object",
+          "required": ["street", "city", "state", "zip", "county"],
+          "additionalProperties": false,
+          "properties": {
+            "street": {"type": "string"}, "city": {"type": "string"},
+            "state": {"type": "string", "pattern": "^[A-Z]{2}$"},
+            "zip": {"type": "string", "pattern": "^[0-9]{5}$"},
+            "county": {"type": "string"}
+          }
+        },
+        "property_type": {"enum": ["sfr_detached", "sfr_attached", "condo", "two_to_four_unit", "manufactured"]},
+        "units": {"type": "integer", "minimum": 1, "maximum": 4},
+        "purchase_price": {"$ref": "#/$defs/money"},
+        "appraised_value": {"$ref": "#/$defs/money"},
+        "appraisal_effective_date": {"$ref": "#/$defs/date"},
+        "subordinate_liens": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["balance", "kind"],
+            "additionalProperties": false,
+            "properties": {"balance": {"$ref": "#/$defs/money"}, "kind": {"enum": ["second_mortgage", "heloc"]}, "drawn": {"$ref": "#/$defs/money"}}
+          }
+        },
+        "annual_taxes": {"$ref": "#/$defs/money"},
+        "annual_hazard_insurance": {"$ref": "#/$defs/money"},
+        "hazard_policy_type": {"enum": ["owner_occupied", "landlord_rental"], "default": "owner_occupied"},
+        "monthly_hoa": {"$ref": "#/$defs/money"},
+        "flood_zone_sidecar": {"type": "string", "description": "consumed only by the simulated flood adapter"}
+      }
+    },
+    "borrowers": {
+      "type": "array", "minItems": 1, "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["borrower_id", "full_name", "ssn", "dob", "is_primary", "self_employed", "employment"],
+        "additionalProperties": false,
+        "properties": {
+          "borrower_id": {"$ref": "#/$defs/ulidish"},
+          "full_name": {"type": "string"},
+          "ssn": {"type": "string", "pattern": "^[0-9]{3}-[0-9]{2}-[0-9]{4}$"},
+          "dob": {"$ref": "#/$defs/date"},
+          "is_primary": {"type": "boolean"},
+          "self_employed": {"type": "boolean"},
+          "employment": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["employer", "position", "start_date", "monthly_base_income_stated"],
+              "additionalProperties": false,
+              "properties": {
+                "employer": {"type": "string"}, "position": {"type": "string"},
+                "start_date": {"$ref": "#/$defs/date"},
+                "monthly_base_income_stated": {"$ref": "#/$defs/money"},
+                "employer_zip": {"type": "string", "pattern": "^[0-9]{5}$"},
+                "distance_to_property_miles_sidecar": {"type": "integer", "minimum": 0, "description": "consumed only by the simulated geo-distance adapter"}
+              }
+            }
+          },
+          "stated_other_income": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["type", "monthly_amount", "history_months"],
+              "additionalProperties": false,
+              "properties": {
+                "type": {"enum": ["bonus", "overtime", "commission", "rental", "alimony", "child_support", "pension", "social_security", "other"]},
+                "monthly_amount": {"$ref": "#/$defs/money"},
+                "history_months": {"type": "integer", "minimum": 0},
+                "continuance_months_stated": {"type": "integer"},
+                "taxable": {"type": "boolean", "default": true}
+              }
+            }
+          },
+          "voe_sidecar": {
+            "type": "object",
+            "description": "consumed only by the simulated VOE adapter",
+            "properties": {"result": {"enum": ["verified", "failed", "unavailable"]}, "verified_start_date": {"$ref": "#/$defs/date"}},
+            "required": ["result"],
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    "credit": {
+      "type": "object",
+      "required": ["report_date", "permissible_purpose", "scores", "tradelines", "derogatories", "open_disputes", "score_range", "key_factors"],
+      "additionalProperties": false,
+      "properties": {
+        "report_date": {"$ref": "#/$defs/date"},
+        "permissible_purpose": {"const": "credit_transaction"},
+        "scores": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["borrower_id"],
+            "additionalProperties": false,
+            "properties": {
+              "borrower_id": {"$ref": "#/$defs/ulidish"},
+              "equifax": {"type": "integer", "minimum": 300, "maximum": 850},
+              "experian": {"type": "integer", "minimum": 300, "maximum": 850},
+              "transunion": {"type": "integer", "minimum": 300, "maximum": 850}
+            }
+          }
+        },
+        "tradelines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["kind", "monthly_payment", "balance", "dispute"],
+            "additionalProperties": false,
+            "properties": {
+              "kind": {"enum": ["mortgage", "auto_loan", "student_loan", "credit_card", "personal_loan", "lease", "other"]},
+              "monthly_payment": {"$ref": "#/$defs/money"},
+              "balance": {"$ref": "#/$defs/money"},
+              "payments_remaining": {"type": "integer"},
+              "dispute": {"type": "boolean"},
+              "late_30_count_12mo": {"type": "integer", "default": 0},
+              "derog": {"type": ["string", "null"], "enum": ["chargeoff", "collection", null]}
+            }
+          }
+        },
+        "derogatories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["kind", "months_since"],
+            "additionalProperties": false,
+            "properties": {"kind": {"enum": ["bk7_discharge", "bk13_filing", "foreclosure", "short_sale", "judgment", "tax_lien"]}, "months_since": {"type": "integer", "minimum": 0}}
+          }
+        },
+        "open_disputes": {"type": "integer", "minimum": 0},
+        "score_range": {
+          "type": "object", "required": ["low", "high"], "additionalProperties": false,
+          "properties": {"low": {"type": "integer"}, "high": {"type": "integer"}}
+        },
+        "key_factors": {"type": "array", "maxItems": 4, "items": {"type": "string"}}
+      }
+    },
+    "assets": {
+      "type": "object",
+      "required": ["accounts", "down_payment_source", "gift_funds"],
+      "additionalProperties": false,
+      "properties": {
+        "accounts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["account_id", "kind", "balance", "statements_doc_ids"],
+            "additionalProperties": false,
+            "properties": {
+              "account_id": {"$ref": "#/$defs/ulidish"},
+              "kind": {"enum": ["checking", "savings", "brokerage", "money_market"]},
+              "balance": {"$ref": "#/$defs/money"},
+              "statements_doc_ids": {"type": "array", "items": {"$ref": "#/$defs/ulidish"}}
+            }
+          }
+        },
+        "retirement_accounts": {
+          "type": "array",
+          "items": {
+            "type": "object", "required": ["kind", "vested_balance"], "additionalProperties": false,
+            "properties": {"kind": {"enum": ["401k", "ira", "roth_ira", "pension_lump"]}, "vested_balance": {"$ref": "#/$defs/money"}}
+          }
+        },
+        "down_payment_source": {"type": "string"},
+        "gift_funds": {
+          "type": "array",
+          "items": {
+            "type": "object", "required": ["amount", "donor", "gift_letter_doc_id"], "additionalProperties": false,
+            "properties": {"amount": {"$ref": "#/$defs/money"}, "donor": {"type": "string"}, "gift_letter_doc_id": {"$ref": "#/$defs/ulidish"}, "transfer_evidenced": {"type": "boolean", "default": false}}
+          }
+        }
+      }
+    },
+    "liabilities_stated_monthly_total": {"$ref": "#/$defs/money"},
+    "processor_computed": {
+      "type": "object",
+      "description": "Processor figures - recomputed by the pipeline, never trusted (HR-8)",
+      "required": ["front_dti", "back_dti", "qualifying_income_monthly"],
+      "additionalProperties": false,
+      "properties": {
+        "front_dti": {"type": "string", "pattern": "^[0-9]+\\.[0-9]$"},
+        "back_dti": {"type": "string", "pattern": "^[0-9]+\\.[0-9]$"},
+        "qualifying_income_monthly": {"$ref": "#/$defs/money"}
+      }
+    },
+    "documents": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["doc_id", "doc_type", "text_rendering"],
+        "additionalProperties": false,
+        "properties": {
+          "doc_id": {"$ref": "#/$defs/ulidish"},
+          "doc_type": {"enum": ["paystub", "w2", "tax_return_1040", "schedule_c", "bank_statement", "tri_merge_credit", "appraisal", "urla_1003", "voe", "gift_letter", "lease"]},
+          "borrower_id": {"$ref": "#/$defs/ulidish"},
+          "period_label": {"type": "string"},
+          "text_rendering": {"type": "string", "minLength": 20},
+          "ground_truth": {"type": "object", "description": "synthetic sidecar powering the mock LLM provider and golden tests"}
+        }
+      }
+    },
+    "hmda_demographics": {
+      "type": "object",
+      "description": "Stripped at intake into the isolated demographics store (HR-6); never reaches the pipeline",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "ethnicity": {"type": "string"}, "race": {"type": "string"},
+          "sex": {"type": "string"}, "age_band": {"type": "string"}
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"loan": {"properties": {"purpose": {"const": "purchase"}}}}},
+      "then": {"properties": {"property": {"required": ["purchase_price"]}}}
+    }
+  ]
+}

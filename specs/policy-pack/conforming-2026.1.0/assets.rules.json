@@ -1,0 +1,58 @@
+{
+  "ruleset": "assets",
+  "pack": "conforming-2026.1.0",
+  "tables": {
+    "min_reserves_months": {
+      "keys": ["occupancy", "units_group"],
+      "select": "months",
+      "rows": [
+        {"occupancy": "primary",     "units_group": "1",   "months": "0.0"},
+        {"occupancy": "primary",     "units_group": "2",   "months": "6.0"},
+        {"occupancy": "primary",     "units_group": "3_4", "months": "6.0"},
+        {"occupancy": "second_home", "units_group": "1",   "months": "2.0"},
+        {"occupancy": "investment",  "units_group": "1",   "months": "6.0"},
+        {"occupancy": "investment",  "units_group": "2",   "months": "6.0"},
+        {"occupancy": "investment",  "units_group": "3_4", "months": "6.0"}
+      ]
+    }
+  },
+  "derived_inputs": {
+    "units_group": {"map": "loan.units", "cases": {"1": "1", "2": "2", "3": "3_4", "4": "3_4"}}
+  },
+  "rules": [
+    {
+      "id": "AST-001",
+      "description": "Post-closing reserves must meet the program minimum for occupancy and unit count",
+      "inputs": ["assets.reserves_months", "loan.occupancy", "loan.units"],
+      "when": {">=": ["assets.reserves_months",
+                      {"table": {"from": "min_reserves_months", "select": "months",
+                                 "match": {"occupancy": "loan.occupancy", "units_group": "units_group"}}}]},
+      "on_fail": {"outcome": "ineligible", "reason_code": "RC-RESERVES-INSUFFICIENT"},
+      "severity": "eligibility"
+    },
+    {
+      "id": "AST-002",
+      "description": "All large deposits (greater than 25% of qualifying monthly income, less than 60 days seasoned) must be sourced",
+      "inputs": ["assets.unsourced_large_deposits"],
+      "when": {"==": ["assets.unsourced_large_deposits", 0]},
+      "on_fail": {"outcome": "refer", "reason_code": "RC-ASSETS-UNSOURCED", "note": "synthesizes PTA sourcing condition; human may decline with this code if unresolved"},
+      "severity": "documentation"
+    },
+    {
+      "id": "AST-003",
+      "description": "Funds to close must be seasoned at least 60 days or documented from an acceptable source",
+      "inputs": ["assets.unseasoned_funds"],
+      "when": {"==": ["assets.unseasoned_funds", 0]},
+      "on_fail": {"outcome": "refer", "reason_code": "RC-ASSETS-UNSOURCED", "note": "synthesizes PTD seasoning condition"},
+      "severity": "documentation"
+    },
+    {
+      "id": "AST-004",
+      "description": "Gift funds require an executed gift letter and evidence of transfer",
+      "inputs": ["assets.gift_funds_undocumented"],
+      "when": {"==": ["assets.gift_funds_undocumented", 0]},
+      "on_fail": {"outcome": "refer", "reason_code": "RC-ASSETS-UNSOURCED", "note": "synthesizes PTA gift-documentation condition"},
+      "severity": "documentation"
+    }
+  ]
+}

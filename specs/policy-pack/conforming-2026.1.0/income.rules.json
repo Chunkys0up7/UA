@@ -1,0 +1,38 @@
+{
+  "ruleset": "income",
+  "pack": "conforming-2026.1.0",
+  "rules": [
+    {
+      "id": "INC-001",
+      "description": "Verified qualifying monthly income must be greater than zero",
+      "inputs": ["income.qualifying_monthly"],
+      "when": {">": ["income.qualifying_monthly", "0.00"]},
+      "on_fail": {"outcome": "ineligible", "reason_code": "RC-INCOME-UNVERIFIABLE"},
+      "severity": "eligibility"
+    },
+    {
+      "id": "INC-002",
+      "description": "Variable income (bonus/overtime/commission) may only be included with at least 12 months documented history (enforced at calculation; this rule verifies no included component violates it)",
+      "inputs": ["income.variable_included_under_12mo"],
+      "when": {"==": ["income.variable_included_under_12mo", 0]},
+      "on_fail": {"outcome": "refer", "reason_code": "RC-INCOME-HISTORY"},
+      "severity": "eligibility"
+    },
+    {
+      "id": "INC-003",
+      "description": "Income discrepancies beyond tolerance between stated and documented amounts must be resolved (documentation)",
+      "inputs": ["income.discrepancies_exceeded"],
+      "when": {"==": ["income.discrepancies_exceeded", 0]},
+      "on_fail": {"outcome": "refer", "reason_code": "RC-INCOME-UNVERIFIABLE", "note": "synthesizes PTA income-documentation condition"},
+      "severity": "documentation"
+    },
+    {
+      "id": "INC-004",
+      "description": "Self-employment income requires at least 24 months of business history",
+      "inputs": ["income.se_history_months"],
+      "when": {"or": [{"absent": "income.se_history_months"}, {">=": ["income.se_history_months", 24]}]},
+      "on_fail": {"outcome": "refer", "reason_code": "RC-INCOME-HISTORY"},
+      "severity": "eligibility"
+    }
+  ]
+}

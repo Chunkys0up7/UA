@@ -1,0 +1,34 @@
+{
+  "ruleset": "dti",
+  "pack": "conforming-2026.1.0",
+  "rules": [
+    {
+      "id": "DTI-001",
+      "description": "Back-end DTI must not exceed 45%, or 50% with at least 2 compensating factors",
+      "inputs": ["dti.back_ratio", "compensating.count"],
+      "when": {
+        "or": [
+          {"<=": ["dti.back_ratio", "45.000"]},
+          {"and": [
+            {"<=": ["dti.back_ratio", "50.000"]},
+            {">=": ["compensating.count", 2]}
+          ]}
+        ]
+      },
+      "on_fail": {
+        "outcome": "ineligible",
+        "reason_code": "RC-DTI-EXCESSIVE",
+        "counteroffer": {"solve_for": "loan.amount", "target": {"<=": ["dti.back_ratio", "45.000"]}}
+      },
+      "severity": "eligibility"
+    },
+    {
+      "id": "DTI-002",
+      "description": "Front-end DTI above 38% is noted for underwriter attention (informational)",
+      "inputs": ["dti.front_ratio"],
+      "when": {"<=": ["dti.front_ratio", "38.000"]},
+      "on_fail": {"outcome": "refer", "reason_code": "RC-DTI-EXCESSIVE", "note": "informational note only; feeds decision packet context"},
+      "severity": "informational"
+    }
+  ]
+}

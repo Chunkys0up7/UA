@@ -1,0 +1,30 @@
+{
+  "ruleset": "property",
+  "pack": "conforming-2026.1.0",
+  "rules": [
+    {
+      "id": "PROP-001",
+      "description": "Property type must be in the eligible set; manufactured housing refers for manual program review in this pack version",
+      "inputs": ["property.type"],
+      "when": {"in": ["property.type", ["sfr_detached", "sfr_attached", "condo", "two_to_four_unit"]]},
+      "on_fail": {"outcome": "refer", "reason_code": "RC-PROPERTY-INELIGIBLE"},
+      "severity": "eligibility"
+    },
+    {
+      "id": "DOC-001",
+      "description": "Credit report must be no older than 120 days at evaluation",
+      "inputs": ["credit.report_age_days"],
+      "when": {"<=": ["credit.report_age_days", 120]},
+      "on_fail": {"outcome": "refer", "reason_code": "RC-DATA-MISSING", "note": "synthesizes PTD updated-credit condition"},
+      "severity": "documentation"
+    },
+    {
+      "id": "DOC-002",
+      "description": "Appraisal must be no older than 120 days at evaluation",
+      "inputs": ["appraisal.age_days"],
+      "when": {"<=": ["appraisal.age_days", 120]},
+      "on_fail": {"outcome": "refer", "reason_code": "RC-DATA-MISSING", "note": "synthesizes PTD appraisal-update condition"},
+      "severity": "documentation"
+    }
+  ]
+}

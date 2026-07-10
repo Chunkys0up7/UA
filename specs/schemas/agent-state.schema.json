@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ua:schemas:agent-state:1",
+  "title": "UnderwritingState (LangGraph shared state; < 32 KB serialized — NFR-4)",
+  "type": "object",
+  "required": ["application_id", "policy_pack_version", "progress", "four_cs", "red_flags", "aus", "conditions_summary"],
+  "additionalProperties": true,
+  "properties": {
+    "application_id": {"type": "string"},
+    "policy_pack_version": {"type": "string"},
+    "progress": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "status", "detail"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"enum": ["package_validate", "document_extraction", "data_verification", "income_calc",
+                           "credit_analysis", "asset_analysis", "collateral_analysis", "fraud_screen",
+                           "rules_eval", "aus_simulate", "condition_synthesis", "prepare_decision", "finalize"]},
+          "label": {"type": "string"},
+          "status": {"enum": ["pending", "running", "done", "warning", "error"]},
+          "detail": {"type": "string", "maxLength": 200}
+        }
+      }
+    },
+    "four_cs": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "credit": {"type": "object", "properties": {"representative_score": {"type": ["integer", "null"]}, "open_disputes": {"type": "integer"}, "flags": {"type": "array", "items": {"type": "string"}}}},
+        "capacity": {"type": "object", "properties": {"front_ratio": {"type": ["string", "null"]}, "back_ratio": {"type": ["string", "null"]}, "qualifying_income_monthly": {"type": ["string", "null"]}}},
+        "capital": {"type": "object", "properties": {"reserves_months": {"type": ["string", "null"]}, "unsourced_deposits": {"type": "integer"}}},
+        "collateral": {"type": "object", "properties": {"ltv": {"type": ["string", "null"]}, "cltv": {"type": ["string", "null"]}}}
+      }
+    },
+    "red_flags": {"type": "array", "items": {"type": "object", "required": ["code", "severity", "description"], "additionalProperties": false, "properties": {"code": {"type": "string"}, "severity": {"enum": ["info", "elevated", "critical"]}, "description": {"type": "string"}}}},
+    "aus": {"type": "object", "additionalProperties": false, "properties": {"recommendation": {"type": ["string", "null"]}, "message_count": {"type": "integer"}}},
+    "conditions_summary": {"type": "array", "items": {"type": "object", "required": ["id", "category", "title", "source_kind"], "additionalProperties": false, "properties": {"id": {"type": "string"}, "category": {"enum": ["PTA", "PTD", "PTF"]}, "title": {"type": "string"}, "source_kind": {"type": "string"}}}},
+    "decision_packet": {"type": ["object", "null"], "description": "ua:schemas:interrupt-resume:1#/$defs/decision_packet"},
+    "human_decision": {"type": ["object", "null"], "description": "ua:schemas:interrupt-resume:1#/$defs/resume"},
+    "messages": {"type": "array", "description": "chat channel; managed by LangGraph add_messages"}
+  }
+}

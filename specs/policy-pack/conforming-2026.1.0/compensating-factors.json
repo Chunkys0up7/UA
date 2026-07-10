@@ -1,0 +1,9 @@
+{
+  "comment": "Compensating factors counted toward compensating.count (07 §7.6). Each is evaluated deterministically over the evaluation context; each satisfied factor records lineage to its basis.",
+  "factors": [
+    {"id": "CF-SCORE",    "description": "Representative credit score 740 or higher",       "when": {">=": ["credit.representative_score", 740]}},
+    {"id": "CF-RESERVES", "description": "Post-closing reserves of 6 months or more",        "when": {">=": ["assets.reserves_months", "6.0"]}},
+    {"id": "CF-LTV",      "description": "Loan-to-value 75% or lower",                       "when": {"<=": ["ltv.ltv", "75.00"]}},
+    {"id": "CF-RESIDUAL", "description": "Residual income of $2,500/month or more after PITIA and liabilities", "when": {">=": ["income.residual_monthly", "2500.00"]}}
+  ]
+}

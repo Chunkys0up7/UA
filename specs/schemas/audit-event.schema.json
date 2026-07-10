@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ua:schemas:audit-event:1",
+  "title": "Audit ledger event",
+  "type": "object",
+  "required": ["seq", "event_id", "application_id", "event_type", "actor", "payload", "prev_hash", "hash", "created_at"],
+  "additionalProperties": false,
+  "properties": {
+    "seq": {"type": "integer", "minimum": 1},
+    "event_id": {"type": "string", "pattern": "^[0-9A-HJKMNP-TV-Z]{26}$"},
+    "application_id": {"type": "string"},
+    "event_type": {
+      "enum": ["package_accepted", "state_change", "llm_call", "adapter_call", "calculation_set",
+               "discrepancy_found", "red_flag", "rule_eval_batch", "aus_run", "condition_created",
+               "decision_packet_ready", "human_action", "override", "adverse_action_generated",
+               "hmda_action_taken", "tool_call", "node_error", "seal"]
+    },
+    "actor": {"type": "string", "pattern": "^(system|agent|underwriter:[A-Za-z0-9_-]+)$"},
+    "payload": {"type": "object", "description": "event-type-specific; catalogued in 11-audit-repeatability.md §3; hashed in its canonical JSON form"},
+    "prev_hash": {"type": "string", "pattern": "^(GENESIS|[0-9a-f]{64})$"},
+    "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "created_at": {"type": "string", "description": "UTC ISO-8601 with milliseconds"}
+  }
+}

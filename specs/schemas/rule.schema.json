@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ua:schemas:rule:1",
+  "title": "Policy rules file",
+  "type": "object",
+  "required": ["ruleset", "pack", "rules"],
+  "additionalProperties": false,
+  "$defs": {
+    "predicate": {
+      "type": "object",
+      "minProperties": 1,
+      "maxProperties": 1,
+      "properties": {
+        "and": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/predicate"}},
+        "or": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/predicate"}},
+        "not": {"$ref": "#/$defs/predicate"},
+        "==": {"$ref": "#/$defs/binary"},
+        "!=": {"$ref": "#/$defs/binary"},
+        "<": {"$ref": "#/$defs/binary"},
+        "<=": {"$ref": "#/$defs/binary"},
+        ">": {"$ref": "#/$defs/binary"},
+        ">=": {"$ref": "#/$defs/binary"},
+        "in": {"type": "array", "prefixItems": [{"$ref": "#/$defs/operand"}, {"type": "array"}], "minItems": 2, "maxItems": 2},
+        "absent": {"type": "string"},
+        "present": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "binary": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"$ref": "#/$defs/operand"}},
+    "operand": {
+      "oneOf": [
+        {"type": "string", "description": "dot-path context lookup or Decimal literal string"},
+        {"type": "number"}, {"type": "integer"}, {"type": "boolean"},
+        {"$ref": "#/$defs/table_lookup"}
+      ]
+    },
+    "table_lookup": {
+      "type": "object",
+      "required": ["table"],
+      "additionalProperties": false,
+      "properties": {
+        "table": {
+          "type": "object",
+          "required": ["from", "select", "match"],
+          "additionalProperties": false,
+          "properties": {
+            "from": {"type": "string"},
+            "select": {"type": "string"},
+            "match": {"type": "object", "additionalProperties": {"type": "string"}}
+          }
+        }
+      }
+    }
+  },
+  "properties": {
+    "ruleset": {"type": "string"},
+    "pack": {"type": "string"},
+    "comment": {"type": "string"},
+    "tables": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["keys", "select", "rows"],
+        "additionalProperties": false,
+        "properties": {
+          "keys": {"type": "array", "items": {"type": "string"}},
+          "select": {"type": "string"},
+          "rows": {"type": "array", "items": {"type": "object"}}
+        }
+      }
+    },
+    "derived_inputs": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["map", "cases"],
+        "additionalProperties": false,
+        "properties": {"map": {"type": "string"}, "cases": {"type": "object"}}
+      }
+    },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "description", "inputs", "when", "on_fail", "severity"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "pattern": "^[A-Z]+-[0-9]{3}$"},
+          "description": {"type": "string"},
+          "inputs": {"type": "array", "items": {"type": "string"}},
+          "when": {"$ref": "#/$defs/predicate"},
+          "on_fail": {
+            "type": "object",
+            "required": ["outcome", "reason_code"],
+            "additionalProperties": false,
+            "properties": {
+              "outcome": {"enum": ["ineligible", "refer"]},
+              "reason_code": {"type": "string", "pattern": "^RC-[A-Z-]+$"},
+              "note": {"type": "string"},
+              "counteroffer": {
+                "type": "object",
+                "required": ["solve_for", "target"],
+                "additionalProperties": false,
+                "properties": {"solve_for": {"const": "loan.amount"}, "target": {"$ref": "#/$defs/predicate"}}
+              }
+            }
+          },
+          "severity": {"enum": ["eligibility", "documentation", "informational"]}
+        }
+      }
+    }
+  }
+}

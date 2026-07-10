@@ -1,0 +1,67 @@
+{
+  "ruleset": "ltv-matrix",
+  "pack": "conforming-2026.1.0",
+  "tables": {
+    "max_ltv": {
+      "keys": ["purpose_group", "occupancy", "units_group"],
+      "select": "max_ltv",
+      "rows": [
+        {"purpose_group": "purchase_rate_term", "occupancy": "primary",     "units_group": "1",    "max_ltv": "95.00"},
+        {"purpose_group": "purchase_rate_term", "occupancy": "primary",     "units_group": "2",    "max_ltv": "95.00"},
+        {"purpose_group": "purchase_rate_term", "occupancy": "primary",     "units_group": "3_4",  "max_ltv": "80.00"},
+        {"purpose_group": "purchase_rate_term", "occupancy": "second_home", "units_group": "1",    "max_ltv": "90.00"},
+        {"purpose_group": "purchase_rate_term", "occupancy": "investment",  "units_group": "1",    "max_ltv": "85.00"},
+        {"purpose_group": "purchase_rate_term", "occupancy": "investment",  "units_group": "2",    "max_ltv": "75.00"},
+        {"purpose_group": "purchase_rate_term", "occupancy": "investment",  "units_group": "3_4",  "max_ltv": "75.00"},
+        {"purpose_group": "cash_out",           "occupancy": "primary",     "units_group": "1",    "max_ltv": "80.00"},
+        {"purpose_group": "cash_out",           "occupancy": "primary",     "units_group": "2",    "max_ltv": "75.00"},
+        {"purpose_group": "cash_out",           "occupancy": "primary",     "units_group": "3_4",  "max_ltv": "75.00"},
+        {"purpose_group": "cash_out",           "occupancy": "second_home", "units_group": "1",    "max_ltv": "75.00"},
+        {"purpose_group": "cash_out",           "occupancy": "investment",  "units_group": "1",    "max_ltv": "75.00"},
+        {"purpose_group": "cash_out",           "occupancy": "investment",  "units_group": "2",    "max_ltv": "70.00"},
+        {"purpose_group": "cash_out",           "occupancy": "investment",  "units_group": "3_4",  "max_ltv": "70.00"}
+      ]
+    }
+  },
+  "derived_inputs": {
+    "purpose_group": {"map": "loan.purpose", "cases": {"purchase": "purchase_rate_term", "rate_term_refi": "purchase_rate_term", "cash_out_refi": "cash_out"}},
+    "units_group": {"map": "loan.units", "cases": {"1": "1", "2": "2", "3": "3_4", "4": "3_4"}}
+  },
+  "rules": [
+    {
+      "id": "LTV-001",
+      "description": "LTV must not exceed the program maximum for purpose, occupancy, and unit count",
+      "inputs": ["ltv.ltv", "loan.purpose", "loan.occupancy", "loan.units"],
+      "when": {
+        "<=": ["ltv.ltv", {"table": {"from": "max_ltv", "select": "max_ltv",
+                "match": {"purpose_group": "purpose_group", "occupancy": "loan.occupancy", "units_group": "units_group"}}}]
+      },
+      "on_fail": {
+        "outcome": "ineligible",
+        "reason_code": "RC-LTV-EXCESSIVE",
+        "counteroffer": {"solve_for": "loan.amount",
+                         "target": {"<=": ["ltv.ltv", {"table": {"from": "max_ltv", "select": "max_ltv", "match": {"purpose_group": "purpose_group", "occupancy": "loan.occupancy", "units_group": "units_group"}}}]}}
+      },
+      "severity": "eligibility"
+    },
+    {
+      "id": "LTV-002",
+      "description": "CLTV (including subordinate financing) must not exceed the same program maximum",
+      "inputs": ["ltv.cltv", "loan.purpose", "loan.occupancy", "loan.units"],
+      "when": {
+        "<=": ["ltv.cltv", {"table": {"from": "max_ltv", "select": "max_ltv",
+                "match": {"purpose_group": "purpose_group", "occupancy": "loan.occupancy", "units_group": "units_group"}}}]
+      },
+      "on_fail": {"outcome": "ineligible", "reason_code": "RC-LTV-EXCESSIVE"},
+      "severity": "eligibility"
+    },
+    {
+      "id": "LTV-003",
+      "description": "LTV above 80% requires mortgage insurance evidence prior to funding",
+      "inputs": ["ltv.ltv"],
+      "when": {"<=": ["ltv.ltv", "80.00"]},
+      "on_fail": {"outcome": "refer", "reason_code": "RC-DATA-MISSING", "note": "synthesizes PTF mortgage-insurance condition; not an eligibility failure"},
+      "severity": "documentation"
+    }
+  ]
+}
