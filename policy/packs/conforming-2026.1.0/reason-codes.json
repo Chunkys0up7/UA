@@ -1,0 +1,65 @@
+{
+  "comment": "Reason-code bindings: internal code -> ECOA adverse-action notice text (verbatim, HR-10) + HMDA denial reason code + category. Every rule on_fail.reason_code MUST exist here (FR-POL-4).",
+  "codes": {
+    "RC-DTI-EXCESSIVE": {
+      "ecoa_text": "Income insufficient for amount of credit requested; excessive obligations in relation to income",
+      "hmda_denial_code": 1,
+      "category": "capacity"
+    },
+    "RC-INCOME-UNVERIFIABLE": {
+      "ecoa_text": "Unable to verify income",
+      "hmda_denial_code": 2,
+      "category": "capacity"
+    },
+    "RC-INCOME-HISTORY": {
+      "ecoa_text": "Length or stability of income history insufficient",
+      "hmda_denial_code": 2,
+      "category": "capacity"
+    },
+    "RC-CREDIT-SCORE": {
+      "ecoa_text": "Credit score below program minimum",
+      "hmda_denial_code": 3,
+      "category": "credit"
+    },
+    "RC-CREDIT-DISPUTE": {
+      "ecoa_text": "Unresolved dispute on credit report",
+      "hmda_denial_code": 3,
+      "category": "credit"
+    },
+    "RC-CREDIT-HISTORY": {
+      "ecoa_text": "Derogatory credit history including bankruptcy, foreclosure, or recent mortgage delinquency",
+      "hmda_denial_code": 3,
+      "category": "credit"
+    },
+    "RC-LTV-EXCESSIVE": {
+      "ecoa_text": "Value or type of collateral not sufficient for the loan amount requested",
+      "hmda_denial_code": 4,
+      "category": "collateral"
+    },
+    "RC-PROPERTY-INELIGIBLE": {
+      "ecoa_text": "Collateral property type not eligible for this program",
+      "hmda_denial_code": 4,
+      "category": "collateral"
+    },
+    "RC-RESERVES-INSUFFICIENT": {
+      "ecoa_text": "Insufficient cash reserves",
+      "hmda_denial_code": 5,
+      "category": "capital"
+    },
+    "RC-ASSETS-UNSOURCED": {
+      "ecoa_text": "Unable to verify source of funds for down payment or reserves",
+      "hmda_denial_code": 5,
+      "category": "capital"
+    },
+    "RC-DATA-MISSING": {
+      "ecoa_text": "Credit application incomplete; required information not provided",
+      "hmda_denial_code": 7,
+      "category": "other"
+    },
+    "RC-LIMIT-EXCEEDED": {
+      "ecoa_text": "Loan amount requested exceeds program limits",
+      "hmda_denial_code": 9,
+      "category": "other"
+    }
+  }
+}

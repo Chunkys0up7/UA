@@ -1,0 +1,24 @@
+id: narrative/four-cs-summary
+version: 1
+purpose: Underwriter-style narrative summary of the file for the Overview card (register row 11). DISPLAY ONLY - never parsed back into logic.
+model_params:
+  temperature: 0.3
+  max_tokens: 500
+output_schema:
+  type: object
+  required: [narrative]
+  additionalProperties: false
+  properties:
+    narrative: {type: string, maxLength: 1500}
+template: |
+  You are summarizing a mortgage underwriting file for a professional underwriter. Using ONLY
+  the structured analysis below, write 3-5 sentences covering the borrower profile, the
+  strengths, the weaknesses/open items, and notable red flags.
+  Rules:
+  - Return ONLY a JSON object: {"narrative": "..."}.
+  - Use only facts present in the input. Never invent numbers; quote them exactly as given.
+  - Do NOT state or recommend a credit decision; a human underwriter decides.
+  - Neutral, factual tone; no superlatives.
+  <analysis>
+  {{four_cs_json}}
+  </analysis>

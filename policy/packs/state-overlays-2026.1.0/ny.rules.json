@@ -1,0 +1,46 @@
+{
+  "ruleset": "state-ny",
+  "pack": "state-overlays-2026.1.0",
+  "comment": "New York two-tier regime: Banking Law §6-l high-cost (ineligible) and §6-m subprime (conditions), plus CEMA structure condition on refinances.",
+  "rules": [
+    {
+      "id": "SNY-001",
+      "description": "New York high-cost home loan (§6-l): first-lien APR more than 8 points over comparable Treasury, or points and fees over 5% - high-cost loans are not originated (not GSE-deliverable)",
+      "citation": "N.Y. Banking Law §6-l",
+      "applies": {"==": ["property.state", "NY"]},
+      "inputs": ["state.apr_spread_treasury", "loan.points_and_fees_pct"],
+      "when": {"and": [
+        {"<=": ["state.apr_spread_treasury", "8.000"]},
+        {"<=": ["loan.points_and_fees_pct", "5.000"]}
+      ]},
+      "on_fail": {"outcome": "ineligible", "reason_code": "RC-STATE-HIGHCOST"},
+      "severity": "eligibility"
+    },
+    {
+      "id": "SNY-002",
+      "description": "New York subprime home loan (§6-m): first-lien rate more than 1.75 points over the Freddie Mac PMMS Northeast average triggers subprime duties (ability-to-repay verification, escrow, net tangible benefit, anti-steering)",
+      "citation": "N.Y. Banking Law §6-m",
+      "applies": {"==": ["property.state", "NY"]},
+      "inputs": ["state.rate_spread_pmms"],
+      "when": {"<=": ["state.rate_spread_pmms", "1.750"]},
+      "on_fail": {
+        "outcome": "refer",
+        "reason_code": "RC-STATE-HIGHCOST",
+        "note": "subprime tier - conditions, not prohibition",
+        "artifact": {"id": "NY-6M-DUTIES", "category": "PTD", "text_template": "NY §6-m subprime loan duties: document ability-to-repay verification, establish tax/insurance escrow, complete net-tangible-benefit analysis, and retain anti-steering documentation."}
+      },
+      "severity": "documentation"
+    },
+    {
+      "id": "SNY-003",
+      "description": "New York refinance: CEMA (Consolidation, Extension & Modification Agreement) structure available so mortgage recording tax applies only to new money; underwriting standards unchanged - documentation/structure condition only",
+      "citation": "N.Y. Tax Law §255; Freddie Mac Guide 4101.11",
+      "applies": {"and": [{"==": ["property.state", "NY"]}, {"in": ["loan.purpose", ["rate_term_refi", "cash_out_refi"]]}]},
+      "inputs": ["loan.purpose"],
+      "when": {"present": "loan.purpose"},
+      "on_fail": {"outcome": "refer", "reason_code": "RC-STATE-DATA-MISSING"},
+      "artifact_always": {"id": "NY-CEMA", "category": "PTD", "text_template": "Confirm whether the loan will close as a CEMA; if so, obtain prior-lender assignment and consolidation/extension/modification documents."},
+      "severity": "informational"
+    }
+  ]
+}

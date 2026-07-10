@@ -1,0 +1,41 @@
+{
+  "ruleset": "loan-limits",
+  "pack": "conforming-2026.1.0",
+  "tables": {
+    "conforming_limits_2026": {
+      "keys": ["units", "high_cost"],
+      "select": "limit",
+      "rows": [
+        {"units": 1, "high_cost": false, "limit": "832750"},
+        {"units": 1, "high_cost": true,  "limit": "1249125"},
+        {"units": 2, "high_cost": false, "limit": "1066350"},
+        {"units": 2, "high_cost": true,  "limit": "1599150"},
+        {"units": 3, "high_cost": false, "limit": "1289200"},
+        {"units": 3, "high_cost": true,  "limit": "1933650"},
+        {"units": 4, "high_cost": false, "limit": "1602050"},
+        {"units": 4, "high_cost": true,  "limit": "2402650"}
+      ]
+    }
+  },
+  "rules": [
+    {
+      "id": "LIMIT-001",
+      "description": "Loan amount must not exceed the 2026 conforming loan limit for the property's unit count and county cost designation",
+      "inputs": ["loan.amount", "loan.units", "loan.county_high_cost"],
+      "when": {
+        "<=": [
+          "loan.amount",
+          {"table": {"from": "conforming_limits_2026", "select": "limit",
+                     "match": {"units": "loan.units", "high_cost": "loan.county_high_cost"}}}
+        ]
+      },
+      "on_fail": {
+        "outcome": "ineligible",
+        "reason_code": "RC-LIMIT-EXCEEDED",
+        "counteroffer": {"solve_for": "loan.amount",
+                         "target": {"<=": ["loan.amount", {"table": {"from": "conforming_limits_2026", "select": "limit", "match": {"units": "loan.units", "high_cost": "loan.county_high_cost"}}}]}}
+      },
+      "severity": "eligibility"
+    }
+  ]
+}

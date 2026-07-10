@@ -1,0 +1,20 @@
+{
+  "ruleset": "state-ga",
+  "pack": "state-overlays-2026.1.0",
+  "comment": "Georgia Fair Lending Act: high-cost home loans not originated; points-and-fees flag at 5%.",
+  "rules": [
+    {
+      "id": "SGA-001",
+      "description": "Georgia Fair Lending Act high-cost home loan: points and fees at or above 5% of the loan amount (or APR trigger) - high-cost loans are not originated",
+      "citation": "O.C.G.A. §7-6A-2 (Georgia Fair Lending Act)",
+      "applies": {"==": ["property.state", "GA"]},
+      "inputs": ["loan.points_and_fees_pct", "apor.spread"],
+      "when": {"and": [
+        {"<": ["loan.points_and_fees_pct", "5.000"]},
+        {"<=": ["apor.spread", "6.500"]}
+      ]},
+      "on_fail": {"outcome": "ineligible", "reason_code": "RC-STATE-HIGHCOST"},
+      "severity": "eligibility"
+    }
+  ]
+}

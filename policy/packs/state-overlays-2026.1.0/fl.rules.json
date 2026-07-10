@@ -1,0 +1,18 @@
+{
+  "ruleset": "state-fl",
+  "pack": "state-overlays-2026.1.0",
+  "comment": "Florida insurance-adequacy conditions: windstorm coverage and percentage-based hurricane deductibles; condo master-policy review.",
+  "rules": [
+    {
+      "id": "SFL-001",
+      "description": "Florida property insurance: confirm windstorm/hurricane coverage with acceptable percentage deductible (2/3/5/10% of insured value) and flood-zone determination; condominiums additionally require master policy and HO-6 adequacy review",
+      "citation": "Fla. Stat. §627.701 (hurricane deductibles); GSE project/insurance standards",
+      "applies": {"==": ["property.state", "FL"]},
+      "inputs": ["property.type"],
+      "when": {"present": "property.type"},
+      "on_fail": {"outcome": "refer", "reason_code": "RC-STATE-DATA-MISSING"},
+      "artifact_always": {"id": "FL-WIND-INS", "category": "PTF", "text_template": "Evidence of windstorm/hurricane coverage with acceptable percentage deductible and current flood-zone determination{condo_suffix}."},
+      "severity": "documentation"
+    }
+  ]
+}

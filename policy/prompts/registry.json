@@ -1,0 +1,17 @@
+{
+  "comment": "Active prompt versions. A prompt_id not listed here is rejected at runtime (FR-LLM-3). The active set is pinned at run start and recorded in the DecisionSnapshot (HR-7).",
+  "active": {
+    "extraction/paystub": 1,
+    "extraction/w2": 1,
+    "extraction/tax-return-1040": 1,
+    "extraction/schedule-c": 1,
+    "extraction/bank-statement": 1,
+    "extraction/appraisal": 1,
+    "extraction/urla-1003": 1,
+    "extraction/gift-letter": 1,
+    "extraction/lease": 1,
+    "conditions/draft-condition": 1,
+    "narrative/four-cs-summary": 1,
+    "chat/workbench-qa": 1
+  }
+}

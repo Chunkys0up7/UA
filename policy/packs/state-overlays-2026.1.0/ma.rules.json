@@ -1,0 +1,28 @@
+{
+  "ruleset": "state-ma",
+  "pack": "state-overlays-2026.1.0",
+  "comment": "Massachusetts: c.183C high-cost (ineligible) and 209 CMR 53 borrower's-interest (net tangible benefit) worksheet on refinances within 60 months.",
+  "rules": [
+    {
+      "id": "SMA-001",
+      "description": "Massachusetts high-cost home mortgage loan (c.183C): high-cost loans are not originated (APR-spread proxy trigger per reference-indices)",
+      "citation": "Mass. Gen. Laws c.183C",
+      "applies": {"==": ["property.state", "MA"]},
+      "inputs": ["apor.spread"],
+      "when": {"<=": ["apor.spread", "6.500"]},
+      "on_fail": {"outcome": "ineligible", "reason_code": "RC-STATE-HIGHCOST"},
+      "severity": "eligibility"
+    },
+    {
+      "id": "SMA-002",
+      "description": "Massachusetts borrower's-interest rule (183 §28C / 209 CMR 53): any refinance of a home loan made within the prior 60 months requires a dated Borrower's Interest Worksheet demonstrating net tangible benefit, unless a safe harbor applies (new APR at least 2.50 points below trigger vs prior first-lien loan, or FHA/VA/HFA)",
+      "citation": "Mass. Gen. Laws c.183 §28C; 209 CMR 53.00",
+      "applies": {"and": [{"==": ["property.state", "MA"]}, {"in": ["loan.purpose", ["rate_term_refi", "cash_out_refi"]]}]},
+      "inputs": ["loan.purpose"],
+      "when": {"present": "loan.purpose"},
+      "on_fail": {"outcome": "refer", "reason_code": "RC-STATE-NTB"},
+      "artifact_always": {"id": "MA-BI-WORKSHEET", "category": "PTA", "text_template": "Complete and date the Massachusetts Borrower's Interest Worksheet (209 CMR 53) demonstrating the refinance is in the borrower's interest, or document an applicable safe harbor."},
+      "severity": "documentation"
+    }
+  ]
+}

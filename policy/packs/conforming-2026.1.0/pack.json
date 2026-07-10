@@ -1,0 +1,18 @@
+{
+  "pack_id": "conforming",
+  "version": "2026.1.0",
+  "effective_date": "2026-01-01",
+  "description": "Conventional conforming underwriting policy pack, 2026 limits. Immutable once released; changes ship as a new version directory.",
+  "files": {
+    "assets.rules.json": "beed9958f13d5c6f60f3fc3a709a8cede11b8928311794b66d3b62f535ab97b0",
+    "compensating-factors.json": "3d6bd77451558a08bae91de124a3f0219d2bb9f8673437463ad44a0485496dab",
+    "constants.json": "cd060304a49ae606102dd8dd3a88613a49d0bafbf76bf12179fa47caef079b8b",
+    "credit.rules.json": "8d9d2ef225ffc2c7c9d2ed775e8473b470485736805516cc92981f245976c1f5",
+    "dti.rules.json": "4b2447ce42bdb66ec6e19dbf797d2321c320dc79cb6b74e97a6329503ee2dc93",
+    "income.rules.json": "9b35c21a58f233fae2b85322f57cb7812748e97d616524593f994cccfdb39e10",
+    "loan-limits.rules.json": "0d6688806d49b79621bd5dd7d784231ba92482120db46c0c3ff710a53c088f7a",
+    "ltv-matrix.rules.json": "1bf98b049b0828ba6e873ed5931cb8207bb254e0826d8515e81e4b886c2e1d8c",
+    "property.rules.json": "5aac385c79e6c410e145280af8d865c70432eca228b45ec168de38deae277c60",
+    "reason-codes.json": "8b05c8d949b8b260a17cc595c63db2ad26e3ff8a4c84b01aa030f8901eeb0c0d"
+  }
+}

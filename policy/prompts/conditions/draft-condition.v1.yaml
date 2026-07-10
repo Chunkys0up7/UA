@@ -1,0 +1,24 @@
+id: conditions/draft-condition
+version: 1
+purpose: Draft borrower-actionable condition wording from a structured finding (register row 10). Category and source are set deterministically by the pipeline; this prompt ONLY words the directive.
+model_params:
+  temperature: 0.2
+  max_tokens: 300
+output_schema:
+  type: object
+  required: [text]
+  additionalProperties: false
+  properties:
+    text: {type: string, maxLength: 400, description: 1-2 sentence directive}
+template: |
+  You draft underwriting condition text for a mortgage file. Given the structured finding
+  below, write a single clear, professional, borrower-actionable directive (1-2 sentences).
+  Rules:
+  - Return ONLY a JSON object: {"text": "..."}.
+  - State exactly what document or action is required and for which borrower/account/amount.
+  - Do NOT state or imply any credit decision, eligibility outcome, or reason for denial.
+  - Do NOT invent requirements not present in the finding.
+  <finding>
+  {{finding_json}}
+  </finding>
+fallback_template: "Provide: {requirement} for {subject}. Source: {source_kind} {source_id}."

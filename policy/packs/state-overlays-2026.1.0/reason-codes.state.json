@@ -1,0 +1,40 @@
+{
+  "comment": "State overlay reason codes - merged with the base pack's reason-codes.json at load (namespace RC-STATE-*; collision with base codes is a load error). ECOA texts are the exact adverse-action notice strings (HR-10).",
+  "codes": {
+    "RC-STATE-TX-50A6-LTV": {
+      "ecoa_text": "Loan-to-value exceeds the 80% limitation for Texas home equity loans",
+      "hmda_denial_code": 4,
+      "category": "collateral"
+    },
+    "RC-STATE-TX-50A6-FEES": {
+      "ecoa_text": "Fees exceed the 2% limitation applicable to Texas home equity loans",
+      "hmda_denial_code": 9,
+      "category": "other"
+    },
+    "RC-STATE-TX-50A6-SEASONING": {
+      "ecoa_text": "Texas home equity loan seasoning requirements not met; a prior home equity loan closed within the preceding 12 months",
+      "hmda_denial_code": 9,
+      "category": "other"
+    },
+    "RC-STATE-TX-50A6-SUBORDINATE": {
+      "ecoa_text": "Simultaneous subordinate financing is not permitted with a Texas home equity loan",
+      "hmda_denial_code": 9,
+      "category": "other"
+    },
+    "RC-STATE-HIGHCOST": {
+      "ecoa_text": "Loan terms exceed applicable high-cost loan thresholds; this program does not originate high-cost loans",
+      "hmda_denial_code": 9,
+      "category": "other"
+    },
+    "RC-STATE-NTB": {
+      "ecoa_text": "Net tangible benefit to the borrower not demonstrated as required by state law",
+      "hmda_denial_code": 9,
+      "category": "other"
+    },
+    "RC-STATE-DATA-MISSING": {
+      "ecoa_text": "Information required to evaluate state law compliance was not provided",
+      "hmda_denial_code": 7,
+      "category": "other"
+    }
+  }
+}

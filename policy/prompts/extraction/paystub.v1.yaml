@@ -1,0 +1,26 @@
+id: extraction/paystub
+version: 1
+purpose: Extract payroll fields from a paystub text rendering (register row 1)
+model_params:
+  temperature: 0
+  max_tokens: 1024
+output_schema:
+  type: object
+  additionalProperties: false
+  properties:
+    gross_pay_period: {type: string, pattern: "^[0-9]+\\.[0-9]{2}$", description: gross pay for this pay period}
+    pay_frequency: {type: string, enum: [weekly, biweekly, semi_monthly, monthly]}
+    ytd_gross: {type: string, pattern: "^[0-9]+\\.[0-9]{2}$"}
+    employer: {type: string}
+    pay_date: {type: string, format: date}
+    confidence: {type: object, description: "0..1 per field", additionalProperties: {type: number, minimum: 0, maximum: 1}}
+template: |
+  You are a document-extraction engine for mortgage underwriting. Extract fields from the
+  paystub below. Rules:
+  - Return ONLY a JSON object matching the output schema. No prose, no markdown fences.
+  - Monetary values: digits with exactly two decimals, no commas or currency symbols.
+  - If a field is not present in the document, omit it (do not guess) and give it confidence 0.
+  - Include a "confidence" object scoring each extracted field from 0 to 1.
+  <document>
+  {{document_text}}
+  </document>

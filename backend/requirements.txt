@@ -45,3 +45,6 @@ ag-ui-langgraph>=0.0.7
 # aiosqlite 0.22 removed the Thread base class; langgraph-checkpoint-sqlite
 # 2.0.x still calls Connection.is_alive() (bootstrap-verified 2026-07).
 aiosqlite>=0.20,<0.22
+
+# --- IDs ---------------------------------------------------------------
+ulid-py>=1.1,<2

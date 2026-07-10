@@ -1,0 +1,28 @@
+id: extraction/schedule-c
+version: 1
+purpose: Extract self-employment cash-flow fields from a Schedule C text rendering (register row 4)
+model_params:
+  temperature: 0
+  max_tokens: 1024
+output_schema:
+  type: object
+  additionalProperties: false
+  properties:
+    net_profit: {type: string, pattern: "^-?[0-9]+\\.[0-9]{2}$", description: line 31}
+    depreciation: {type: string, pattern: "^[0-9]+\\.[0-9]{2}$", description: line 13}
+    depletion: {type: string, pattern: "^[0-9]+\\.[0-9]{2}$", description: line 12}
+    home_office: {type: string, pattern: "^[0-9]+\\.[0-9]{2}$", description: line 30 business use of home}
+    amortization_casualty: {type: string, pattern: "^[0-9]+\\.[0-9]{2}$", description: amortization or casualty loss add-back if itemized}
+    business_start_hint: {type: string, description: any stated business start date or years-in-business}
+    tax_year: {type: integer, minimum: 2015, maximum: 2030}
+    confidence: {type: object, additionalProperties: {type: number, minimum: 0, maximum: 1}}
+template: |
+  You are a document-extraction engine for mortgage underwriting. Extract fields from the
+  Schedule C below. Rules:
+  - Return ONLY a JSON object matching the output schema. No prose, no markdown fences.
+  - Monetary values: digits with exactly two decimals, no commas or currency symbols.
+  - If a field is not present, omit it and give it confidence 0.
+  - Include a "confidence" object scoring each extracted field from 0 to 1.
+  <document>
+  {{document_text}}
+  </document>

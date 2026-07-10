@@ -1,0 +1,18 @@
+{
+  "ruleset": "state-co",
+  "pack": "state-overlays-2026.1.0",
+  "comment": "Colorado ADMT Act (SB 26-189, eff. 2027-01-01): disclosure + appeal + data-correction duties when automated decision-making contributes to an adverse credit decision. The substantive duties execute in the adverse_action node via states-index admt_adverse_artifact flags; this informational rule surfaces the obligation in the rules table so underwriters see it pre-decision.",
+  "rules": [
+    {
+      "id": "SCO-001",
+      "description": "Colorado ADMT: if this application is declined, the borrower is entitled to a plain-language explanation within 30 days, a human-review request path, and correction of inaccurate personal data used in the decision (system generates these artifacts automatically on decline)",
+      "citation": "Colorado SB 26-189 (Automated Decision-Making Technology Act, eff. 2027-01-01)",
+      "applies": {"==": ["property.state", "CO"]},
+      "inputs": ["property.state"],
+      "when": {"present": "property.state"},
+      "on_fail": {"outcome": "refer", "reason_code": "RC-STATE-DATA-MISSING"},
+      "artifact_always": {"id": "CO-ADMT-NOTE", "category": "PTD", "text_template": "Colorado ADMT duties apply: on any adverse decision, deliver the plain-language explanation, human-review request path, and data-correction path with the adverse-action notice."},
+      "severity": "informational"
+    }
+  ]
+}
