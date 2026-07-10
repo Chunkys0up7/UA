@@ -41,16 +41,36 @@ _run_registry: dict[str, CaseRun] = {}
 _submitted_packages: dict[str, dict] = {}
 
 
+# ---------------------------------------------------------------------------
+# LLM provider registry (specs/10 §6 swap procedure).
+# To plug in YOUR provider: implement app.llm.ua_base.UALLMClient in ONE new
+# file (the only file importing your vendor SDK - HR-9), then register a
+# factory here. Everything else - prompts, audit events, decisions - is
+# provider-agnostic by construction.
+# ---------------------------------------------------------------------------
+def _make_anthropic():
+    from app.llm.ua_anthropic import AnthropicUALLMClient
+    return AnthropicUALLMClient(
+        model_id=os.environ.get("LLM_MODEL", "claude-sonnet-4-6"))
+
+
+LLM_PROVIDERS: dict[str, Any] = {
+    "mock": MockUALLMClient,
+    "anthropic": _make_anthropic,
+    # "yourprovider": _make_yourprovider,   <- add yours here (see README)
+}
+
+
 def get_services() -> Services:
     global _services
     if _services is None:
         provider = os.environ.get("LLM_PROVIDER", "mock")
-        if provider == "anthropic":
-            from app.llm.ua_anthropic import AnthropicUALLMClient
-            llm = AnthropicUALLMClient(
-                model_id=os.environ.get("LLM_MODEL", "claude-sonnet-4-6"))
-        else:
-            provider, llm = "mock", MockUALLMClient()
+        factory = LLM_PROVIDERS.get(provider)
+        if factory is None:
+            log.warning("llm.unknown_provider_falling_back_to_mock",
+                        requested=provider)
+            provider, factory = "mock", MockUALLMClient
+        llm = factory()
         _services = Services(
             packs=load_packs(
                 REPO_ROOT / "policy" / "packs" / "conforming-2026.1.0",
