@@ -57,6 +57,7 @@ Every implementation decision defers to these. Each has at least one enforcing t
 7. `12-api-contracts.md`, `13-frontend-workbench.md` — the surface.
 8. `14-synthetic-data.md`, `15-testing-acceptance.md`, `16-implementation-plan.md` — data, proof, and build order. **Follow the phase gates in 16 strictly; Phase 0 must pass before any domain code is written.**
 9. `17-state-overlays.md` — the state-by-state rules layer (mechanism + shipped `state-overlays-2026.1.0` pack). Read alongside 07; overlays evaluate in the same engine.
+10. `18-advisory-llm-layer.md` — **PROPOSED, not yet implemented**: the advisory LLM lane (whole-file coherence critic, HR-11 containment contract, disposition workflow). Normative for Phase P8 if adopted; amends 00/01/02/09/10/12/13/15/16 on adoption.
 
 Machine-readable artifacts (normative, not illustrative):
 - `policy-pack/conforming-2026.1.0/` — the actual base rule pack the system ships with.
